@@ -22,15 +22,15 @@ export default function Login() {
 
     }
     return (
-        <div className="flex h-full flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-            <main className="flex h-full w-full max-w-3xl flex-col items-center justify-between py-32 px-16 dark:bg-black sm:items-start">
+        <div className="flex h-screen flex-col items-center justify-center font-sans dark:bg-black">
+            <main className="flex w-full max-w-3xl flex-col items-center justify-between py-32 px-16 dark:bg-black sm:items-start">
 
                 <h1 className="max-w-xs text-6xl mx-auto font-bold text-black dark:text-zinc-50">
                     Login
                 </h1>
-                <div className="w-full h-full text-center sm:items-start sm:text-left">
-                    <div className="w-130 h-full text-black dark:text-zinc-50 shadow-2xl p-8 shadow-mauve-600 rounded-2xl m-auto">
-                        <div className="mt-15 overflow-scroll w-full h-full">
+                <div className="w-full  text-center sm:items-start sm:text-left">
+                    <div className="w-130 text-black dark:text-zinc-50 shadow-2xl p-8 shadow-mauve-600 rounded-2xl m-auto">
+                        <div className="mt-15 mb-4 w-full">
                             <form onSubmit={HandleLoginSubmit} >
                                 <FieldGroup>
                                     <FieldSet>
@@ -76,8 +76,12 @@ export default function Login() {
                                 </FieldGroup>
                             </form>
                         </div>
+                            <span>
+                                Not Registered yet? <a className="text-blue-400" href="/register">Register</a>
+                            </span>
                     </div>
                 </div>
+
 
             </main>
         </div>

@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import BlurredBackground from "@/components/blurBackground";
 import { ThemeProvider } from "@/components/theme-providor";
+import { Toaster } from "@/components/ui/toast";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -32,13 +33,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="h-auto">
         <TooltipProvider>
-           <ThemeProvider
+          <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
             {children}
+            <Toaster />
           </ThemeProvider>
         </TooltipProvider>
       </body>

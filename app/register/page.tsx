@@ -4,8 +4,11 @@ import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLeg
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { toast } from "@/components/ui/toast";
 import { SaveUser, SearchUserEmails, SearchUserNames } from "@/lib/action";
+import { Reg_data } from "@/lib/type";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 import React, { useState } from "react";
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -17,13 +20,22 @@ export default function Register() {
 
     async function HandleLoginSubmit(event: React.SubmitEvent<HTMLFormElement>) {
         event.preventDefault();
+
+        if (!isEmailValid || !isUsernameValid) {
+            toast.add({ title: 'Please check email and username' })
+            return
+        }
         const form = event.currentTarget;
         const formData = new FormData(form);
 
-        console.log(formData);
-        const response = await SaveUser(formData);
-        console.log(response);
+        const payload = Object.fromEntries(formData.entries());
 
+        console.log(formData);
+        const response = (await SaveUser(payload as unknown as Reg_data)).success;
+        toast.add({ title: response ? 'Registerd Successfully' : 'Some Error Occured. Please Try Again After some time' });
+        setTimeout(() => {
+            redirect(response ? '/login' : '/')
+        }, 1500);
     }
     const SearchExistingUserNames = useDebouncedCallback(async (term) => {
         console.log(term);
@@ -45,7 +57,7 @@ export default function Register() {
                 </h1>
                 <div className="w-full  text-center sm:items-start sm:text-left">
                     <div className="w-130 text-black dark:text-zinc-50 shadow-2xl p-8 shadow-mauve-600 rounded-2xl m-auto">
-                        <div className="mt-15 w-full h-full">
+                        <div className="mt-15 mb-3 w-full h-full">
                             <form onSubmit={HandleLoginSubmit} >
                                 <FieldGroup>
                                     <FieldSet>
@@ -66,8 +78,8 @@ export default function Register() {
                                                     aria-invalid={!isEmailValid}
                                                 />
 
-                                               
-                                                <FieldDescription className={`${isEmailValid? 'hidden': ''}`}>
+
+                                                <FieldDescription className={`${isEmailValid ? 'hidden' : ''}`}>
                                                     This Email is Already in use.
                                                 </FieldDescription>
                                             </Field>
@@ -86,7 +98,7 @@ export default function Register() {
                                                     required
                                                     aria-invalid={!isUsernameValid}
                                                 />
-                                                 <FieldDescription className={`${isUsernameValid? 'hidden': ''}`}>
+                                                <FieldDescription className={`${isUsernameValid ? 'hidden' : ''}`}>
                                                     This UserName is Already Taken.
                                                 </FieldDescription>
                                             </Field>
@@ -96,16 +108,16 @@ export default function Register() {
                                                     <InputGroupInput
                                                         id="password"
                                                         name="password"
-                                                        type={`${passwordVisible? 'text': 'password'}`}
+                                                        type={`${passwordVisible ? 'text' : 'password'}`}
                                                         placeholder="Enter password"
 
 
                                                     />
                                                     <InputGroupAddon align="inline-end">
-                                                        <EyeIcon className={`${!passwordVisible ? 'hidden ': 'cursor-pointer'}`} onClick={()=>{
+                                                        <EyeIcon className={`${!passwordVisible ? 'hidden ' : 'cursor-pointer'}`} onClick={() => {
                                                             setPasswordVisible(false);
                                                         }} />
-                                                        <EyeOffIcon className={`${passwordVisible ? 'hidden ': 'cursor-pointer'}`} onClick={()=>{
+                                                        <EyeOffIcon className={`${passwordVisible ? 'hidden ' : 'cursor-pointer'}`} onClick={() => {
                                                             setPasswordVisible(true);
                                                         }} />
                                                     </InputGroupAddon>
@@ -152,6 +164,9 @@ export default function Register() {
                                 </FieldGroup>
                             </form>
                         </div>
+                        <span>
+                            Already Registered? <a className="text-blue-400" href="/login">Login</a>
+                        </span>
                     </div>
                 </div>
 

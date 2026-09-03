@@ -9,8 +9,8 @@ import Users from './models/user.model';
  
 async function getUser(email: string) {
   try {
-    const user = await Users.find({email});
-    return user[0];
+    const user = await Users.findOne({email});
+    return user;
   } catch (error) {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');

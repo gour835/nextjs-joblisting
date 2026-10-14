@@ -2,34 +2,15 @@
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
-import { authenticate } from "@/lib/action";
-import { CircleSlashedIcon, EyeOffIcon } from "lucide-react";
+import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
+
 import { useSearchParams } from "next/navigation";
 import React, { useActionState } from "react";
+import { login } from "../action/auth";
 
 
 export default function Login() {
-
-    async function HandleLoginSubmit(event: React.SubmitEvent<HTMLFormElement>) {
-        event.preventDefault();
-        const form = event.currentTarget;
-        const formData = new FormData(form);
-
-        const email = formData.get('email')?.toString();
-        const password = formData.get('password')?.toString();
-
-        console.log(email, password);
-
-
-    }
-
-    const searchParams = useSearchParams();
-    const callbackUrl = searchParams.get('callbackUrl') || '/dashboard';
-    const [errorMessage, formAction, isPending] = useActionState(
-        authenticate,
-        undefined,
-    );
+    const [state, action, isPending] = useActionState(login, undefined)
     return (
         <div className="flex h-screen flex-col items-center justify-center font-sans dark:bg-black">
             <main className="flex w-full max-w-3xl flex-col items-center justify-between py-32 px-16 dark:bg-black sm:items-start">
@@ -40,7 +21,7 @@ export default function Login() {
                 <div className="w-full  text-center sm:items-start sm:text-left">
                     <div className="w-130 text-black dark:text-zinc-50 shadow-2xl p-8 shadow-mauve-600 rounded-2xl m-auto">
                         <div className="mt-15 mb-4 w-full">
-                            <form action={formAction} >
+                            <form action={action} >
                                 <FieldGroup>
                                     <FieldSet>
                                         <FieldGroup>
@@ -54,6 +35,7 @@ export default function Login() {
                                                     placeholder="john doe"
                                                     required
                                                 />
+                                                {state?.errors?.email && <p className="text-red-400 mt-1 text-sm">{state.errors.email}</p>}
                                             </Field>
                                             <Field >
                                                 <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -66,10 +48,10 @@ export default function Login() {
 
 
                                                     />
-                                                    <InputGroupAddon align="inline-end">
-                                                        <EyeOffIcon />
-                                                    </InputGroupAddon>
+                                                    
                                                 </InputGroup>
+
+                                                {state?.errors?.password && <p className="text-red-400 mt-1 text-sm">{state.errors.password}</p>}
 
                                             </Field>
 
@@ -82,18 +64,16 @@ export default function Login() {
                                             Cancel
                                         </Button>
                                     </Field>
+                                   
 
                                     <div
                                         className="flex h-8 items-end space-x-1"
                                         aria-live="polite"
                                         aria-atomic="true"
                                     >
-                                        {errorMessage && (
-                                            <>
-                                                <CircleSlashedIcon className="h-5 w-5 text-red-500" />
-                                                <p className="text-sm text-red-500">{errorMessage}</p>
-                                            </>
-                                        )}
+                                       
+
+                                        
                                     </div>
 
                                 </FieldGroup>

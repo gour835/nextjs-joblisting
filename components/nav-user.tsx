@@ -1,5 +1,6 @@
 "use client"
 
+import { logout } from "@/app/action/auth"
 import {
   Avatar,
   AvatarFallback,
@@ -21,6 +22,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { EllipsisVerticalIcon, CircleUserRoundIcon, CreditCardIcon, BellIcon, LogOutIcon } from "lucide-react"
+
 
 export function NavUser({
   user,
@@ -94,10 +96,13 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={()=>{
+              logout();
+            }}>
               <LogOutIcon
               />
-              Log out
+              
+             lll Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

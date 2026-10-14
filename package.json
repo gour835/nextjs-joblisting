@@ -20,6 +20,7 @@
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "jose": "^6.2.12",
     "lucide-react": "^1.33.0",
     "mongoose": "^9.9.3",
     "next": "16.3.2",
@@ -46,5 +47,5 @@
     "tailwindcss": "^4",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@11.21.0"
+  "packageManager": "pnpm@12.11.2"
 }

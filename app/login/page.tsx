@@ -34,9 +34,10 @@ export default function Login() {
                                                     id="email"
                                                     name="email"
                                                     placeholder="john doe"
+                                                    defaultValue={state?.fields?.email ?? ''}
                                                     required
                                                 />
-                                                {/* {state?.errors?.email && <p className="text-red-400 mt-1 text-sm">{state.errors.email}</p>} */}
+                                                {state?.errors?.email && <p className="text-red-400 mt-1 text-sm">{state.errors.email}</p>}
                                             </Field>
                                             <Field >
                                                 <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -77,8 +78,9 @@ export default function Login() {
 
                                 </FieldGroup>
                             </form>
-                        </div>
+                            
                          <SignIn/>
+                        </div>
                         <span>
                             Not Registered yet? <a className="text-blue-400" href="/register">Register</a>
                         </span>

@@ -1,16 +1,9 @@
-// import NextAuth from "next-auth";
-// import { authConfig } from "./auth.config";
-
-// export default NextAuth(authConfig).auth;
-
-// export const config = {
-//   // https://nextjs.org/docs/app/api-reference/file-conventions/proxy#matcher
-//   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
-// };
+// export { auth as proxy } from "@/auth"
 
 import { NextRequest, NextResponse } from 'next/server'
 import { decrypt } from '@/app/lib/session'
 import { cookies } from 'next/headers'
+import { auth } from './auth'
  
 // 1. Specify protected and public routes
 const protectedRoutes = ['/dashboard']
@@ -23,18 +16,18 @@ export default async function proxy(req: NextRequest) {
   const isPublicRoute = publicRoutes.includes(path)
  
   // 3. Decrypt the session from the cookie
-  const cookie = (await cookies()).get('session')?.value
-  const session = await decrypt(cookie)
+//   const cookie = (await cookies()).get('session')?.value
+  const session = await auth()
  
   // 4. Redirect to /login if the user is not authenticated
-  if (isProtectedRoute && !session?.userId) {
+  if (isProtectedRoute && !session?.user) {
     return NextResponse.redirect(new URL('/login', req.nextUrl))
   }
  
   // 5. Redirect to /dashboard if the user is authenticated
   if (
     isPublicRoute &&
-    session?.userId &&
+    session?.user &&
     !req.nextUrl.pathname.startsWith('/dashboard')
   ) {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl))

@@ -7,6 +7,7 @@ import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { useSearchParams } from "next/navigation";
 import React, { useActionState } from "react";
 import { login } from "../action/auth";
+import SignIn from "@/components/signIn";
 
 
 export default function Login() {
@@ -35,7 +36,7 @@ export default function Login() {
                                                     placeholder="john doe"
                                                     required
                                                 />
-                                                {state?.errors?.email && <p className="text-red-400 mt-1 text-sm">{state.errors.email}</p>}
+                                                {/* {state?.errors?.email && <p className="text-red-400 mt-1 text-sm">{state.errors.email}</p>} */}
                                             </Field>
                                             <Field >
                                                 <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -60,9 +61,7 @@ export default function Login() {
                                     <Field orientation="horizontal">
                                         <Button type="submit" aria-disabled={isPending}>Submit</Button>
 
-                                        <Button variant="outline" type="button">
-                                            Cancel
-                                        </Button>
+                                       
                                     </Field>
                                    
 
@@ -79,6 +78,7 @@ export default function Login() {
                                 </FieldGroup>
                             </form>
                         </div>
+                         <SignIn/>
                         <span>
                             Not Registered yet? <a className="text-blue-400" href="/register">Register</a>
                         </span>

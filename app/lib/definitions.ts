@@ -1,11 +1,17 @@
 import {JWTPayload} from 'jose'
 import * as z from "zod";
-import { CheckEmailRegistered } from "../action/auth";
+import { CheckEmailRegistered, CheckUsernameRegistered } from "../action/auth";
 
 export const RegisterFormSchema = z.object({
-    name: z
+    username: z
         .string()
         .min(2, { error: 'Name must be at least 2 characters long.' })
+        .refine(async (username) => {
+            const isRegisteredUsername = await CheckUsernameRegistered(username);
+            return !isRegisteredUsername
+        }, {
+            message: 'This Username is taken, please choose another one'
+        })
         .trim(),
     email: z
         .email({ error: 'Please Enter a Valid Email' })
@@ -16,6 +22,8 @@ export const RegisterFormSchema = z.object({
             message: 'This Email is Already in Use'
         })
         .trim(),
+    category: z
+        .enum(['recruiter', 'developer'], {error: "Please choose One of the above choice, Recruter | Developer"}),
     password: z
         .string()
         .min(8, { error: 'Be at least 8 characters long' })

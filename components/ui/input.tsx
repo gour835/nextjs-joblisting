@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils"
 
 function Input({ className, type, name, ...props }: React.ComponentProps<"input">) {
   return (
+    
     <InputPrimitive
       type={type}
       name={name}

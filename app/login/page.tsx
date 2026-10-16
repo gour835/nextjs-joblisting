@@ -31,6 +31,7 @@ export default function Login() {
                                                     Enter Username/Email Address:
                                                 </FieldLabel>
                                                 <Input
+                                                    key={state?.fields?.email}
                                                     id="email"
                                                     name="email"
                                                     placeholder="john doe"

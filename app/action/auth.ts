@@ -2,7 +2,7 @@
 import { signIn, signOut } from "@/auth";
 import MongoDB from "@/config/mongoDB.config";
 import Users from "@/models/user.model";
-import { FormState, loginFormSchema } from "../lib/definitions";
+import { FormState, loginFormSchema, RegisterFormSchema } from "../lib/definitions";
 import bcrypt from "bcryptjs";
 
 
@@ -13,7 +13,7 @@ export async function logout() {
 }
 
 export async function googleLogin() {
-    await signIn("google", {redirectTo: '/dashboard'})
+    await signIn("google", { redirectTo: '/dashboard' })
 }
 
 export async function login(state: FormState, formData: FormData) {
@@ -36,7 +36,7 @@ export async function login(state: FormState, formData: FormData) {
         }
     }
 
-    // inserting into db
+    // checking from the db
 
     const { email, password } = validate.data
 
@@ -51,7 +51,8 @@ export async function login(state: FormState, formData: FormData) {
     const isPasswrodValid = await bcrypt.compare(password, user.password)
     if (!isPasswrodValid) {
         return {
-            errors: { password: ['Incorrect Password'] }
+            errors: { password: ['Incorrect Password'] },
+            fields: { email }
         }
     }
 
@@ -63,7 +64,72 @@ export async function login(state: FormState, formData: FormData) {
         redirectTo: '/dashboard'
     })
 }
+export async function register(state: FormState, formData: FormData) {
+    //validation 
+    const rawEmail = formData.get('email');
+    const rawUsername = formData.get('username');
+    const rawCategory = formData.get('category');
+    const rawPassword = formData.get('password');
+
+    const emailStr = typeof rawEmail == 'string' ? rawEmail : ''
+    const usernameStr = typeof rawUsername == 'string' ? rawUsername : ''
+    const categoryStr = typeof rawCategory == 'string' ? rawCategory : ''
+    const passwrodStr = typeof rawPassword == 'string' ? rawPassword : ''
+
+    const validate = await RegisterFormSchema.safeParseAsync({
+        email: emailStr,
+        username: usernameStr,
+        category: categoryStr,
+        password: passwrodStr
+    })
+
+    if (!validate.success) {
+        return {
+            errors: validate.error.flatten().fieldErrors,
+            fields: { email: emailStr, username: usernameStr,  category: categoryStr }
+        }
+    }
+
+    // inserting into db
+
+    const { email, username, category, password } = validate.data
+
+    const userEmail = await Users.findOne({ email });
+    if (userEmail) {
+        return {
+            errors: { email: ['Email Address Already In Use.'] },
+            fields: { email, username, category }
+        }
+    }
+
+    const userUsername = await Users.findOne({ username });
+    if (userUsername) {
+        return {
+            errors: { email: ['This Username is Taken.'] },
+            fields: { email, username, category }
+        }
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await Users.create({
+        email,
+        username,
+        category,
+        password: hashedPassword
+    });
+
+    await signIn('credentials', {
+        email,
+        password,
+        redirectTo: '/dashboard'
+    })
+}
 export async function CheckEmailRegistered(email: string) {
     const user = await Users.findOne({ email });
+    return !!user
+}
+export async function CheckUsernameRegistered(username: string) {
+    const user = await Users.findOne({ username });
     return !!user
 }

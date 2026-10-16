@@ -41,7 +41,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               const hashedPassword= await bcrypt.hash('google_password', 10);
               await Users.create({
                 email: user.email,
-                name: user.name,
                 password: hashedPassword,
                 image: user.image
               })

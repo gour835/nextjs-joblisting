@@ -2,52 +2,16 @@
 import { Button } from "@/components/ui/button";
 import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLegend, FieldSet, FieldTitle } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
+import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { toast } from "@/components/ui/toast";
-import { SaveUser, SearchUserEmails, SearchUserNames } from "@/lib/action";
-import { Reg_data } from "@/lib/type";
-import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { redirect } from "next/navigation";
-import React, { useState } from "react";
-import { useDebouncedCallback } from 'use-debounce';
+import { useActionState } from "react";
+import { register } from "../action/auth";
+import SignIn from "@/components/signIn";
+
 
 
 export default function Register() {
-    const [isUsernameValid, setIsUsernameValid] = useState(true);
-    const [isEmailValid, setIsEmailValid] = useState(true);
-    const [passwordVisible, setPasswordVisible] = useState(false);
-
-    async function HandleLoginSubmit(event: React.SubmitEvent<HTMLFormElement>) {
-        event.preventDefault();
-
-        if (!isEmailValid || !isUsernameValid) {
-            toast.add({ title: 'Please check email and username' })
-            return
-        }
-        const form = event.currentTarget;
-        const formData = new FormData(form);
-
-        const payload = Object.fromEntries(formData.entries());
-
-        console.log(formData);
-        const response = (await SaveUser(payload as unknown as Reg_data)).success;
-        toast.add({ title: response ? 'Registerd Successfully' : 'Some Error Occured. Please Try Again After some time' });
-        setTimeout(() => {
-            redirect(response ? '/login' : '/')
-        }, 1500);
-    }
-    const SearchExistingUserNames = useDebouncedCallback(async (term) => {
-        console.log(term);
-        const result = await SearchUserNames(term);
-        setIsUsernameValid(result ? false : true);
-    }, 1000)
-
-    const SearchExistingUserEmails = useDebouncedCallback(async (term) => {
-        console.log(term);
-        const result = await SearchUserEmails(term);
-        setIsEmailValid(result ? false : true);
-    }, 1000)
+    const [state, action, isPending] = useActionState(register, undefined)
     return (
         <div className="flex h-full flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
             <main className="flex  w-full max-w-3xl flex-col items-center justify-between py-15 px-16 dark:bg-black sm:items-start">
@@ -58,7 +22,7 @@ export default function Register() {
                 <div className="w-full  text-center sm:items-start sm:text-left">
                     <div className="w-130 text-black dark:text-zinc-50 shadow-2xl p-8 shadow-mauve-600 rounded-2xl m-auto">
                         <div className="mt-15 mb-3 w-full h-full">
-                            <form onSubmit={HandleLoginSubmit} >
+                            <form action={action} >
                                 <FieldGroup>
                                     <FieldSet>
                                         <FieldGroup>
@@ -67,21 +31,17 @@ export default function Register() {
                                                     Enter Email Address:
                                                 </FieldLabel>
                                                 <Input
+                                                    key={state?.fields?.email}
                                                     id="email"
                                                     name="email"
                                                     type="email"
                                                     placeholder="johndoe@gmail.com"
-                                                    onChange={(e) => {
-                                                        SearchExistingUserEmails(e.target.value);
-                                                    }}
+                                                    defaultValue={state?.fields?.email || ''}
+                                                    aria-invalid={state?.errors?.email && true}
                                                     required
-                                                    aria-invalid={!isEmailValid}
                                                 />
 
-
-                                                <FieldDescription className={`${isEmailValid ? 'hidden' : ''}`}>
-                                                    This Email is Already in use.
-                                                </FieldDescription>
+                                                {state?.errors?.email && <p className="text-red-400 mt-1 text-sm">{state.errors.email}</p>}
                                             </Field>
 
                                             <Field>
@@ -89,44 +49,46 @@ export default function Register() {
                                                     Enter Username:
                                                 </FieldLabel>
                                                 <Input
+                                                    key={state?.fields?.username}
                                                     id="username"
                                                     name="username"
                                                     placeholder="john_doe@1234"
-                                                    onChange={(e) => {
-                                                        SearchExistingUserNames(e.target.value);
-                                                    }}
+                                                    defaultValue={state?.fields?.username || ''}
+                                                    aria-invalid={state?.errors?.username && true}
                                                     required
-                                                    aria-invalid={!isUsernameValid}
                                                 />
-                                                <FieldDescription className={`${isUsernameValid ? 'hidden' : ''}`}>
-                                                    This UserName is Already Taken.
-                                                </FieldDescription>
+                                                {state?.errors?.username && <p className="text-red-400 mt-1 text-sm">{state.errors.username}</p>}
                                             </Field>
                                             <Field >
                                                 <FieldLabel htmlFor="password">Password</FieldLabel>
-                                                <InputGroup>
-                                                    <InputGroupInput
+                                                <InputGroup className="flex flex-col">
+                                                    <Input
                                                         id="password"
                                                         name="password"
-                                                        type={`${passwordVisible ? 'text' : 'password'}`}
+                                                        type={` 'password'`}
                                                         placeholder="Enter password"
 
 
                                                     />
-                                                    <InputGroupAddon align="inline-end">
-                                                        <EyeIcon className={`${!passwordVisible ? 'hidden ' : 'cursor-pointer'}`} onClick={() => {
-                                                            setPasswordVisible(false);
-                                                        }} />
-                                                        <EyeOffIcon className={`${passwordVisible ? 'hidden ' : 'cursor-pointer'}`} onClick={() => {
-                                                            setPasswordVisible(true);
-                                                        }} />
-                                                    </InputGroupAddon>
                                                 </InputGroup>
+                                                 {state?.errors?.password &&
+
+                                                        <div className="">
+                                                            <p className="text-red-400 mt-1 text-sm">Password Must:</p>
+                                                            {state.errors.password.map((error, index) => {
+                                                                return (
+                                                                    <p key={index} className="text-red-400 mt-1 text-sm">{error}</p>
+                                                                )
+                                                            })}
+
+                                                        </div>
+
+                                                    }
 
                                             </Field>
                                             <FieldSet className="w-full">
                                                 <FieldLegend variant="label">Which Describes you the best:</FieldLegend>
-                                                <RadioGroup name="category" defaultValue="developer" className="w-full">
+                                                <RadioGroup name="category"  className="w-full">
                                                     <FieldLabel htmlFor="developer">
                                                         <Field orientation="horizontal">
                                                             <FieldContent>
@@ -138,24 +100,25 @@ export default function Register() {
                                                             <RadioGroupItem value="developer" id="developer" />
                                                         </Field>
                                                     </FieldLabel>
-                                                    <FieldLabel htmlFor="recruter">
+                                                    <FieldLabel htmlFor="recruiter">
                                                         <Field orientation="horizontal">
                                                             <FieldContent>
-                                                                <FieldTitle>Recruter</FieldTitle>
+                                                                <FieldTitle>Recruiter</FieldTitle>
                                                                 <FieldDescription>For individuals or firms who wants to Hire.</FieldDescription>
                                                             </FieldContent>
-                                                            <RadioGroupItem value="recruter" id="recruter" />
+                                                            <RadioGroupItem value="recruiter" id="recruiter" />
                                                         </Field>
                                                     </FieldLabel>
 
                                                 </RadioGroup>
+                                                {state?.errors?.category && <p className="text-red-400 mt-1 text-sm">{state.errors.category}</p>}
                                             </FieldSet>
 
 
                                         </FieldGroup>
                                     </FieldSet>
-                                    <Field orientation="horizontal">
-                                        <Button type="submit">Submit</Button>
+                                    <Field orientation="horizontal" className="mb-4">
+                                        <Button type="submit" aria-disabled={isPending}>Submit</Button>
                                         <Button variant="outline" type="button">
                                             Cancel
                                         </Button>
@@ -163,8 +126,9 @@ export default function Register() {
 
                                 </FieldGroup>
                             </form>
+                            <SignIn/>
                         </div>
-                        <span>
+                        <span className="mt-4">
                             Already Registered? <a className="text-blue-400" href="/login">Login</a>
                         </span>
                     </div>

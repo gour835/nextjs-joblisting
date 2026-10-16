@@ -1,9 +1,8 @@
 // export { auth as proxy } from "@/auth"
 
 import { NextRequest, NextResponse } from 'next/server'
-import { decrypt } from '@/app/lib/session'
-import { cookies } from 'next/headers'
 import { auth } from './auth'
+import Users from './models/user.model'
  
 // 1. Specify protected and public routes
 const protectedRoutes = ['/dashboard']
@@ -24,6 +23,12 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL('/login', req.nextUrl))
   }
  
+  const category =await Users.findOne({email : session?.user?.email}).select('category');
+
+  if( session?.user && !category){
+    return NextResponse.redirect(new URL('/register', req.nextUrl))
+  }
+  
   // 5. Redirect to /dashboard if the user is authenticated
   if (
     isPublicRoute &&

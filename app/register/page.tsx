@@ -5,13 +5,21 @@ import { Input } from "@/components/ui/input";
 import { InputGroup } from "@/components/ui/input-group";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useActionState } from "react";
-import { register } from "../action/auth";
+import { register, UpdateRegister } from "../action/auth";
 import SignIn from "@/components/signIn";
+import { useSession } from "next-auth/react";
+
 
 
 
 export default function Register() {
-    const [state, action, isPending] = useActionState(register, undefined)
+    const [RegisterState, RegisterAction, RegisterIsPending] = useActionState(register, undefined);
+    const [RegisterUpdateState, RegisterUpdateAction, RegisterUpdateIsPending] = useActionState(UpdateRegister, undefined);
+    const { data, status } = useSession();
+    const formAction = status == 'authenticated' && data.user.category == '' ? RegisterUpdateAction : RegisterAction;
+    const formState = status == 'authenticated' && data.user.category == '' ? RegisterUpdateState : RegisterState;
+    const formIsPending = status == 'authenticated' && data.user.category == '' ? RegisterUpdateIsPending : RegisterIsPending;
+    console.log('from client', data)
     return (
         <div className="flex h-full flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
             <main className="flex  w-full max-w-3xl flex-col items-center justify-between py-15 px-16 dark:bg-black sm:items-start">
@@ -22,7 +30,7 @@ export default function Register() {
                 <div className="w-full  text-center sm:items-start sm:text-left">
                     <div className="w-130 text-black dark:text-zinc-50 shadow-2xl p-8 shadow-mauve-600 rounded-2xl m-auto">
                         <div className="mt-15 mb-3 w-full h-full">
-                            <form action={action} >
+                            <form action={formAction} >
                                 <FieldGroup>
                                     <FieldSet>
                                         <FieldGroup>
@@ -31,17 +39,20 @@ export default function Register() {
                                                     Enter Email Address:
                                                 </FieldLabel>
                                                 <Input
-                                                    key={state?.fields?.email}
+                                                    key={status == 'authenticated' && data?.user?.email  ? data.user.email : formState?.fields?.email || ''}
                                                     id="email"
                                                     name="email"
                                                     type="email"
                                                     placeholder="johndoe@gmail.com"
-                                                    defaultValue={state?.fields?.email || ''}
-                                                    aria-invalid={state?.errors?.email && true}
+                                                    defaultValue={status == 'authenticated' && data?.user?.category == '' ? data.user.email : formState?.fields?.email || ''}
+                                                    disabled={status == 'authenticated' && data.user.category == '' ? true : false}
+                                                    aria-disabled={status == 'authenticated' && data.user.category == '' ? true : false}
+                                                    className="hover:cursor-no-drop"
+                                                    aria-invalid={formState?.errors?.email && true}
                                                     required
                                                 />
 
-                                                {state?.errors?.email && <p className="text-red-400 mt-1 text-sm">{state.errors.email}</p>}
+                                                {formState?.errors?.email && <p className="text-red-400 mt-1 text-sm">{formState.errors.email}</p>}
                                             </Field>
 
                                             <Field>
@@ -49,15 +60,17 @@ export default function Register() {
                                                     Enter Username:
                                                 </FieldLabel>
                                                 <Input
-                                                    key={state?.fields?.username}
+                                                    key={status == 'authenticated' && data?.user?.username ? data.user.username : formState?.fields?.username || ''}
                                                     id="username"
                                                     name="username"
                                                     placeholder="john_doe@1234"
-                                                    defaultValue={state?.fields?.username || ''}
-                                                    aria-invalid={state?.errors?.username && true}
+                                                    defaultValue={status == 'authenticated' && data?.user?.username &&  data.user.category == ''  ? data.user.username : formState?.fields?.username || ''}
+                                                    disabled={status == 'authenticated' && data?.user?.category == '' ? true : false}
+                                                    aria-disabled={status == 'authenticated' && data?.user?.category == '' ? true : false}
+                                                    aria-invalid={formState?.errors?.username && true}
                                                     required
                                                 />
-                                                {state?.errors?.username && <p className="text-red-400 mt-1 text-sm">{state.errors.username}</p>}
+                                                {formState?.errors?.username && <p className="text-red-400 mt-1 text-sm">{formState.errors.username}</p>}
                                             </Field>
                                             <Field >
                                                 <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -71,24 +84,24 @@ export default function Register() {
 
                                                     />
                                                 </InputGroup>
-                                                 {state?.errors?.password &&
+                                                {formState?.errors?.password &&
 
-                                                        <div className="">
-                                                            <p className="text-red-400 mt-1 text-sm">Password Must:</p>
-                                                            {state.errors.password.map((error, index) => {
-                                                                return (
-                                                                    <p key={index} className="text-red-400 mt-1 text-sm">{error}</p>
-                                                                )
-                                                            })}
+                                                    <div className="">
+                                                        <p className="text-red-400 mt-1 text-sm">Password Must:</p>
+                                                        {formState.errors.password.map((error, index) => {
+                                                            return (
+                                                                <p key={index} className="text-red-400 mt-1 text-sm">{error}</p>
+                                                            )
+                                                        })}
 
-                                                        </div>
+                                                    </div>
 
-                                                    }
+                                                }
 
                                             </Field>
                                             <FieldSet className="w-full">
                                                 <FieldLegend variant="label">Which Describes you the best:</FieldLegend>
-                                                <RadioGroup name="category"  className="w-full">
+                                                <RadioGroup name="category" className="w-full">
                                                     <FieldLabel htmlFor="developer">
                                                         <Field orientation="horizontal">
                                                             <FieldContent>
@@ -111,14 +124,14 @@ export default function Register() {
                                                     </FieldLabel>
 
                                                 </RadioGroup>
-                                                {state?.errors?.category && <p className="text-red-400 mt-1 text-sm">{state.errors.category}</p>}
+                                                {formState?.errors?.category && <p className="text-red-400 mt-1 text-sm">{formState.errors.category}</p>}
                                             </FieldSet>
 
 
                                         </FieldGroup>
                                     </FieldSet>
                                     <Field orientation="horizontal" className="mb-4">
-                                        <Button type="submit" aria-disabled={isPending}>Submit</Button>
+                                        <Button type="submit" aria-disabled={formIsPending}>Submit</Button>
                                         <Button variant="outline" type="button">
                                             Cancel
                                         </Button>
@@ -126,7 +139,7 @@ export default function Register() {
 
                                 </FieldGroup>
                             </form>
-                            <SignIn/>
+                            <SignIn />
                         </div>
                         <span className="mt-4">
                             Already Registered? <a className="text-blue-400" href="/login">Login</a>

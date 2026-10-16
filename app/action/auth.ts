@@ -1,9 +1,10 @@
 'use server';
-import { signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import MongoDB from "@/config/mongoDB.config";
 import Users from "@/models/user.model";
-import { FormState, loginFormSchema, RegisterFormSchema } from "../lib/definitions";
+import { FormState, loginFormSchema, RegisterFormSchema, RegisterUpdateSchema } from "../lib/definitions";
 import bcrypt from "bcryptjs";
+import { redirect } from "next/navigation";
 
 
 MongoDB()
@@ -86,7 +87,7 @@ export async function register(state: FormState, formData: FormData) {
     if (!validate.success) {
         return {
             errors: validate.error.flatten().fieldErrors,
-            fields: { email: emailStr, username: usernameStr,  category: categoryStr }
+            fields: { email: emailStr, username: usernameStr, category: categoryStr }
         }
     }
 
@@ -124,6 +125,52 @@ export async function register(state: FormState, formData: FormData) {
         password,
         redirectTo: '/dashboard'
     })
+}
+
+export async function UpdateRegister(state: FormState, formData: FormData) {
+    const rawCategory = formData.get('category');
+    const rawPassword = formData.get('password');
+
+    const categoryStr = typeof rawCategory == 'string' ? rawCategory : '';
+    const passwrodStr = typeof rawPassword == 'string' ? rawPassword : '';
+
+    const validate = await RegisterUpdateSchema.safeParseAsync({
+        category: categoryStr,
+        password: passwrodStr
+    })
+
+    if (!validate.success) {
+        return {
+            errors: validate.error.flatten().fieldErrors,
+            fields: { category: categoryStr }
+        }
+    }
+
+    const { category, password } = validate.data;
+
+    const Session = await auth();
+    if (!Session) {
+        return {
+            errors: { category: ['Some Error Occurred'] },
+            fields: { category }
+        }
+    }
+    console.log(Session?.user.email);
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await Users.findOneAndUpdate({ email: Session?.user.email }, { $set: { category, password: hashedPassword } }, {
+        returnDocument: 'after', // Returns the modified document
+        runValidators: true      // Ensures updates respect schema rules
+    });
+    console.log(user);
+
+    Session.user.category = user.category;
+
+    console.log(Session.user.category);
+
+    redirect('/dashboard');
+
 }
 export async function CheckEmailRegistered(email: string) {
     const user = await Users.findOne({ email });

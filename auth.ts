@@ -57,6 +57,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async session({ session, token }) {
       if (session.user) {
+        // category and username
+        const dbUser = await Users.findOne({email: session.user.email}).select('category username');
+        session.user.category = dbUser.category;
+        session.user.username = dbUser.username;
+        // image
         session.user.image = (token.picture as string) || session.user.image;
       }
       return session;

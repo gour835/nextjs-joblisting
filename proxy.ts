@@ -3,6 +3,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from './auth'
 import Users from './models/user.model'
+import MongoDB from './config/mongoDB.config'
+
+MongoDB();
  
 // 1. Specify protected and public routes
 const protectedRoutes = ['/dashboard']
@@ -23,11 +26,10 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL('/login', req.nextUrl))
   }
  
-  const category =await Users.findOne({email : session?.user?.email}).select('category');
-
-  if( session?.user && !category){
+  if (session?.user && !session.user.category && path !== '/register') {
     return NextResponse.redirect(new URL('/register', req.nextUrl))
   }
+
   
   // 5. Redirect to /dashboard if the user is authenticated
   if (
@@ -35,6 +37,9 @@ export default async function proxy(req: NextRequest) {
     session?.user &&
     !req.nextUrl.pathname.startsWith('/dashboard')
   ) {
+    return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
+  }
+  if (isPublicRoute && session?.user && path === '/login') {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl))
   }
  

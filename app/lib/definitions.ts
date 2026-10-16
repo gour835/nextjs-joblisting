@@ -36,6 +36,20 @@ export const RegisterFormSchema = z.object({
 
 })
 
+export const RegisterUpdateSchema = z.object({
+    category: z
+        .enum(['recruiter', 'developer'], {error: "Please choose One of the above choice, Recruter | Developer"}),
+    password: z
+        .string()
+        .min(8, { error: 'Be at least 8 characters long' })
+        .regex(/[a-zA-Z]/, { error: 'Contain at least one letter.' })
+        .regex(/[0-9]/, { error: 'Contain at least one number.' })
+        .regex(/[^a-zA-Z0-9]/, {
+            error: 'Contain at least one special character.',
+        })
+        .trim(),
+});
+
 export const loginFormSchema = z.object({
     email: z
         .email({ error: 'Please Enter a Valid Email' })
@@ -57,6 +71,8 @@ export type FormState =
     message?: string;
     fields?: {
         email?: string;
+        category?: string;
+        username?: string;
       };
   }
   | undefined

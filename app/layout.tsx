@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import BlurredBackground from "@/components/blurBackground";
 import { ThemeProvider } from "@/components/theme-providor";
 import { Toaster } from "@/components/ui/toast";
+import Providers from "@/components/providers";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -32,17 +33,19 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <body className="h-auto">
-        <TooltipProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <Toaster />
-          </ThemeProvider>
-        </TooltipProvider>
+        <Providers>
+          <TooltipProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+              <Toaster />
+            </ThemeProvider>
+          </TooltipProvider>
+        </Providers>
       </body>
     </html>
   );

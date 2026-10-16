@@ -4,8 +4,7 @@ import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 
-import { useSearchParams } from "next/navigation";
-import React, { useActionState } from "react";
+import  { useActionState } from "react";
 import { login } from "../action/auth";
 import SignIn from "@/components/signIn";
 

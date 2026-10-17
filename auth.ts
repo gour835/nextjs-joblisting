@@ -6,7 +6,7 @@ import MongoDB from "./config/mongoDB.config"
 import bcrypt from "bcryptjs"
 
 MongoDB()
- 
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google({
     clientId: process.env.AUTH_GOOGLE_ID,
@@ -14,17 +14,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   }), Credentials({
     name: 'Credentials',
     credentials: {
-      email: { label: 'Email', type: 'email'},
-      password: { label: 'Password', type: 'password'}
+      email: { label: 'Email', type: 'email' },
+      password: { label: 'Password', type: 'password' }
     },
-    async authorize(credentials){
-      const user = await Users.findOne({email: credentials.email})
-      if(!user)return null
+    async authorize(credentials) {
+      const user = await Users.findOne({ email: credentials.email })
+      if (!user) return null
 
       const validate = await bcrypt.compare(credentials.password as string, user.password);
-      if(!validate) return null
+      if (!validate) return null
 
-      return{
+      return {
         id: user._id,
         email: user.email,
         password: user.password,
@@ -36,31 +36,40 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         try {
-          const existing_user = await  Users.findOne({email: user.email});
-          if(!existing_user){
-              const hashedPassword= await bcrypt.hash('google_password', 10);
-              await Users.create({
-                email: user.email,
-                password: hashedPassword,
-                image: user.image
-              })
-          }else if(!existing_user.image && user.image){
+          const existing_user = await Users.findOne({ email: user.email });
+          if (!existing_user) {
+            const hashedPassword = await bcrypt.hash('google_password', 10);
+            await Users.create({
+              email: user.email,
+              password: hashedPassword,
+              image: user.image
+            })
+            // await Users.create({
+            //   email: user.email,
+            //   password: hashedPassword,
+            //   image: user.image,
+            //   username: user.email?.split('@')[0] || "user",
+            //   category: "general" // <-- Provide a default category so it doesn't fail!
+            // });
+          } else if (!existing_user.image && user.image) {
             existing_user.image = user.image;
             await existing_user.save()
           }
         } catch (error) {
           console.log('Error in signIn Auth ./', error)
-          return true
+          return false
         }
       }
-      return true 
+      return true
     },
     async session({ session, token }) {
       if (session.user) {
         // category and username
-        const dbUser = await Users.findOne({email: session.user.email}).select('category username');
-        session.user.category = dbUser.category;
-        session.user.username = dbUser.username;
+        const dbUser = await Users.findOne({ email: session.user.email }).select('category username');
+        if (dbUser) {
+          session.user.category = dbUser.category;
+          session.user.username = dbUser.username;
+        }
         // image
         session.user.image = (token.picture as string) || session.user.image;
       }

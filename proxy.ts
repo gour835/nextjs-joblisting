@@ -30,11 +30,10 @@ export default async function proxy(req: NextRequest) {
     return NextResponse.redirect(new URL('/register', req.nextUrl))
   }
 
-  
-  // 5. Redirect to /dashboard if the user is authenticated
   if (
     isPublicRoute &&
     session?.user &&
+    session?.user.category &&
     !req.nextUrl.pathname.startsWith('/dashboard')
   ) {
     return NextResponse.redirect(new URL('/dashboard', req.nextUrl))

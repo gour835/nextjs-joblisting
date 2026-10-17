@@ -129,13 +129,16 @@ export async function register(state: FormState, formData: FormData) {
 
 export async function UpdateRegister(state: FormState, formData: FormData) {
     const rawCategory = formData.get('category');
+    const rawUsername = formData.get('username');
     const rawPassword = formData.get('password');
 
     const categoryStr = typeof rawCategory == 'string' ? rawCategory : '';
+    const usernameStr = typeof rawUsername == 'string' ? rawUsername : '';
     const passwrodStr = typeof rawPassword == 'string' ? rawPassword : '';
 
     const validate = await RegisterUpdateSchema.safeParseAsync({
         category: categoryStr,
+        username: usernameStr,
         password: passwrodStr
     })
 
@@ -146,7 +149,7 @@ export async function UpdateRegister(state: FormState, formData: FormData) {
         }
     }
 
-    const { category, password } = validate.data;
+    const { category, username, password } = validate.data;
 
     const Session = await auth();
     if (!Session) {
@@ -159,7 +162,7 @@ export async function UpdateRegister(state: FormState, formData: FormData) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await Users.findOneAndUpdate({ email: Session?.user.email }, { $set: { category, password: hashedPassword } }, {
+    const user = await Users.findOneAndUpdate({ email: Session?.user.email }, { $set: { category, username, password: hashedPassword } }, {
         returnDocument: 'after', // Returns the modified document
         runValidators: true      // Ensures updates respect schema rules
     });

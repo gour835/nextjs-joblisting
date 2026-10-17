@@ -37,6 +37,16 @@ export const RegisterFormSchema = z.object({
 })
 
 export const RegisterUpdateSchema = z.object({
+    username: z
+        .string()
+        .min(2, { error: 'Name must be at least 2 characters long.' })
+        .refine(async (username) => {
+            const isRegisteredUsername = await CheckUsernameRegistered(username);
+            return !isRegisteredUsername
+        }, {
+            message: 'This Username is taken, please choose another one'
+        })
+        .trim(),
     category: z
         .enum(['recruiter', 'developer'], {error: "Please choose One of the above choice, Recruter | Developer"}),
     password: z

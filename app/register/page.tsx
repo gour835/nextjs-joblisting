@@ -16,10 +16,24 @@ export default function Register() {
     const [RegisterState, RegisterAction, RegisterIsPending] = useActionState(register, undefined);
     const [RegisterUpdateState, RegisterUpdateAction, RegisterUpdateIsPending] = useActionState(UpdateRegister, undefined);
     const { data, status } = useSession();
-    const formAction = status == 'authenticated' && data.user.category == '' ? RegisterUpdateAction : RegisterAction;
-    const formState = status == 'authenticated' && data.user.category == '' ? RegisterUpdateState : RegisterState;
-    const formIsPending = status == 'authenticated' && data.user.category == '' ? RegisterUpdateIsPending : RegisterIsPending;
-    console.log('from client', data)
+    const formAction = status == 'authenticated' && !data?.user?.category ? RegisterUpdateAction : RegisterAction;
+    const formState = status == 'authenticated' && !data?.user?.category ? RegisterUpdateState : RegisterState;
+    const formIsPending = status == 'authenticated' && !data?.user?.category ? RegisterUpdateIsPending : RegisterIsPending;
+    console.log('from client',status, data)
+
+    let emailDefault = formState?.fields?.email || '';
+    let usernameDefault = formState?.fields?.username || '';
+
+    if(status == 'authenticated' && !data?.user?.category){
+        if(data?.user?.email){
+            console.log(data.user.email);
+            emailDefault = data.user.email;
+        }
+        if(data?.user?.username){
+            console.log(data.user.username);
+            usernameDefault = data.user.username
+        }
+    }
     return (
         <div className="flex h-full flex-col items-center justify-center bg-zinc-50 font-sans dark:bg-black">
             <main className="flex  w-full max-w-3xl flex-col items-center justify-between py-15 px-16 dark:bg-black sm:items-start">
@@ -39,14 +53,14 @@ export default function Register() {
                                                     Enter Email Address:
                                                 </FieldLabel>
                                                 <Input
-                                                    key={status == 'authenticated' && data?.user?.email  ? data.user.email : formState?.fields?.email || ''}
+                                                    key={emailDefault}
                                                     id="email"
                                                     name="email"
                                                     type="email"
                                                     placeholder="johndoe@gmail.com"
-                                                    defaultValue={status == 'authenticated' && data?.user?.category == '' ? data.user.email : formState?.fields?.email || ''}
-                                                    disabled={status == 'authenticated' && data.user.category == '' ? true : false}
-                                                    aria-disabled={status == 'authenticated' && data.user.category == '' ? true : false}
+                                                    defaultValue={emailDefault}
+                                                    disabled={status == 'authenticated' && !data?.user?.category  ? true : false}
+                                                    aria-disabled={status == 'authenticated' && !data?.user?.category ? true : false}
                                                     className="hover:cursor-no-drop"
                                                     aria-invalid={formState?.errors?.email && true}
                                                     required
@@ -60,13 +74,13 @@ export default function Register() {
                                                     Enter Username:
                                                 </FieldLabel>
                                                 <Input
-                                                    key={status == 'authenticated' && data?.user?.username ? data.user.username : formState?.fields?.username || ''}
+                                                    key={usernameDefault}
                                                     id="username"
                                                     name="username"
                                                     placeholder="john_doe@1234"
-                                                    defaultValue={status == 'authenticated' && data?.user?.username &&  data.user.category == ''  ? data.user.username : formState?.fields?.username || ''}
-                                                    disabled={status == 'authenticated' && data?.user?.category == '' ? true : false}
-                                                    aria-disabled={status == 'authenticated' && data?.user?.category == '' ? true : false}
+                                                    defaultValue={usernameDefault}
+                                                    // disabled={status == 'authenticated' && !data?.user?.category ? true : false}
+                                                    // aria-disabled={status == 'authenticated' && !data?.user?.category ? true : false}
                                                     aria-invalid={formState?.errors?.username && true}
                                                     required
                                                 />

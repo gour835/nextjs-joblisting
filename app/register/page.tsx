@@ -16,9 +16,11 @@ export default function Register() {
     const [RegisterState, RegisterAction, RegisterIsPending] = useActionState(register, undefined);
     const [RegisterUpdateState, RegisterUpdateAction, RegisterUpdateIsPending] = useActionState(UpdateRegister, undefined);
     const { data, status } = useSession();
-    const formAction = status == 'authenticated' && !data?.user?.category ? RegisterUpdateAction : RegisterAction;
-    const formState = status == 'authenticated' && !data?.user?.category ? RegisterUpdateState : RegisterState;
-    const formIsPending = status == 'authenticated' && !data?.user?.category ? RegisterUpdateIsPending : RegisterIsPending;
+    const user = data?.user as { category?: string; email?: string; username?: string } | undefined;
+
+const formAction = status == 'authenticated' && !user?.category ? RegisterUpdateAction : RegisterAction;
+const formState = status == 'authenticated' && !user?.category ? RegisterUpdateState : RegisterState;
+const formIsPending = status == 'authenticated' && !user?.category ? RegisterUpdateIsPending : RegisterIsPending;
     console.log('from client',status, data)
 
     let emailDefault = formState?.fields?.email || '';

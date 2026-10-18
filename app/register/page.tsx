@@ -18,20 +18,20 @@ export default function Register() {
     const { data, status } = useSession();
     const user = data?.user as { category?: string; email?: string; username?: string } | undefined;
 
-const formAction = status == 'authenticated' && !user?.category ? RegisterUpdateAction : RegisterAction;
-const formState = status == 'authenticated' && !user?.category ? RegisterUpdateState : RegisterState;
-const formIsPending = status == 'authenticated' && !user?.category ? RegisterUpdateIsPending : RegisterIsPending;
-    console.log('from client',status, data)
+    const formAction = status == 'authenticated' && !user?.category ? RegisterUpdateAction : RegisterAction;
+    const formState = status == 'authenticated' && !user?.category ? RegisterUpdateState : RegisterState;
+    const formIsPending = status == 'authenticated' && !user?.category ? RegisterUpdateIsPending : RegisterIsPending;
+    console.log('from client', status, data)
 
     let emailDefault = formState?.fields?.email || '';
     let usernameDefault = formState?.fields?.username || '';
 
-    if(status == 'authenticated' && !data?.user?.category){
-        if(data?.user?.email){
+    if (status == 'authenticated' && !data?.user?.category) {
+        if (data?.user?.email) {
             console.log(data.user.email);
             emailDefault = data.user.email;
         }
-        if(data?.user?.username){
+        if (data?.user?.username) {
             console.log(data.user.username);
             usernameDefault = data.user.username
         }
@@ -61,9 +61,9 @@ const formIsPending = status == 'authenticated' && !user?.category ? RegisterUpd
                                                     type="email"
                                                     placeholder="johndoe@gmail.com"
                                                     defaultValue={emailDefault}
-                                                    disabled={status == 'authenticated' && !data?.user?.category  ? true : false}
+                                                    disabled={status == 'authenticated' && !data?.user?.category ? true : false}
                                                     aria-disabled={status == 'authenticated' && !data?.user?.category ? true : false}
-                                                    className="hover:cursor-no-drop"
+                                                    className={status == 'authenticated' && !data?.user?.category ? 'hover:cursor-no-drop' :''}
                                                     aria-invalid={formState?.errors?.email && true}
                                                     required
                                                 />

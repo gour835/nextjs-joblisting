@@ -4,27 +4,35 @@ import { Field, FieldContent, FieldDescription, FieldGroup, FieldLabel, FieldLeg
 import { Input } from "@/components/ui/input";
 import { InputGroup } from "@/components/ui/input-group";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { register, UpdateRegister } from "../action/auth";
 import SignIn from "@/components/signIn";
 import { useSession } from "next-auth/react";
 
-
+type CustomUser = {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    category?: string;
+    username?: string;
+};
 
 
 export default function Register() {
+    const [showPassword, setShowPassword] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
     const [RegisterState, RegisterAction, RegisterIsPending] = useActionState(register, undefined);
     const [RegisterUpdateState, RegisterUpdateAction, RegisterUpdateIsPending] = useActionState(UpdateRegister, undefined);
     const { data, status } = useSession();
-    const user = data?.user as { category?: string; email?: string; username?: string } | undefined;
+    const user = data?.user as CustomUser | undefined;
 
     const formAction = status == 'authenticated' && !user?.category ? RegisterUpdateAction : RegisterAction;
     const formState = status == 'authenticated' && !user?.category ? RegisterUpdateState : RegisterState;
     const formIsPending = status == 'authenticated' && !user?.category ? RegisterUpdateIsPending : RegisterIsPending;
     console.log('from client', status, data)
 
-    let emailDefault = formState?.fields?.email || '';
-    let usernameDefault = formState?.fields?.username || '';
+    let emailDefault = formState?.fields?.email || (status === 'authenticated' ? user?.email || '' : '');
+    let usernameDefault = formState?.fields?.username || (status === 'authenticated' ? user?.username || '' : '');
 
     if (status == 'authenticated' && !data?.user?.category) {
         if (data?.user?.email) {
@@ -63,7 +71,7 @@ export default function Register() {
                                                     defaultValue={emailDefault}
                                                     disabled={status == 'authenticated' && !data?.user?.category ? true : false}
                                                     aria-disabled={status == 'authenticated' && !data?.user?.category ? true : false}
-                                                    className={status == 'authenticated' && !data?.user?.category ? 'hover:cursor-no-drop' :''}
+                                                    className={status == 'authenticated' && !data?.user?.category ? 'hover:cursor-no-drop' : ''}
                                                     aria-invalid={formState?.errors?.email && true}
                                                     required
                                                 />
@@ -88,33 +96,37 @@ export default function Register() {
                                                 />
                                                 {formState?.errors?.username && <p className="text-red-400 mt-1 text-sm">{formState.errors.username}</p>}
                                             </Field>
-                                            <Field >
-                                                <FieldLabel htmlFor="password">Password</FieldLabel>
-                                                <InputGroup className="flex flex-col">
-                                                    <Input
-                                                        id="password"
-                                                        name="password"
-                                                        type={` 'password'`}
-                                                        placeholder="Enter password"
+                                            <Field>
+        <FieldLabel htmlFor="password">Password</FieldLabel>
+        <InputGroup className="flex flex-col">
+            <Input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter password"
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                onDoubleClick={() => setShowPassword(!showPassword)}
+                className="cursor-pointer"
+            />
+        </InputGroup>
+        
+        {/* Only shows when the input is focused */}
+        {isFocused && (
+            <p className="text-xs text-muted-foreground mt-1 animate-fade-in">
+                💡 Double-click the box to {showPassword ? 'hide' : 'reveal'} password
+            </p>
+        )}
 
-
-                                                    />
-                                                </InputGroup>
-                                                {formState?.errors?.password &&
-
-                                                    <div className="">
-                                                        <p className="text-red-400 mt-1 text-sm">Password Must:</p>
-                                                        {formState.errors.password.map((error, index) => {
-                                                            return (
-                                                                <p key={index} className="text-red-400 mt-1 text-sm">{error}</p>
-                                                            )
-                                                        })}
-
-                                                    </div>
-
-                                                }
-
-                                            </Field>
+        {formState?.errors?.password && (
+            <div className="">
+                <p className="text-red-400 mt-1 text-sm">Password Must:</p>
+                {formState.errors.password.map((error, index) => (
+                    <p key={index} className="text-red-400 mt-1 text-sm">{error}</p>
+                ))}
+            </div>
+        )}
+    </Field>
                                             <FieldSet className="w-full">
                                                 <FieldLegend variant="label">Which Describes you the best:</FieldLegend>
                                                 <RadioGroup name="category" className="w-full">

@@ -4,12 +4,14 @@ import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group";
 
-import  { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { login } from "../action/auth";
 import SignIn from "@/components/signIn";
 
 
 export default function Login() {
+    const [showPassword, setShowPassword] = useState(false);
+    const [isFocused, setIsFocused] = useState(false);
     const [state, action, isPending] = useActionState(login, undefined)
     return (
         <div className="flex h-screen flex-col items-center justify-center font-sans dark:bg-black">
@@ -19,7 +21,7 @@ export default function Login() {
                     Login
                 </h1>
                 <div className="w-full  text-center sm:items-start sm:text-left">
-                    <div className="w-130 text-black dark:text-zinc-50 shadow-2xl p-8 shadow-mauve-600 rounded-2xl m-auto">
+                    <div className="lg:w-130 text-black dark:text-zinc-50 shadow-2xl p-8 shadow-mauve-600 rounded-2xl m-auto">
                         <div className="mt-15 mb-4 w-full">
                             <form action={action} >
                                 <FieldGroup>
@@ -45,13 +47,22 @@ export default function Login() {
                                                     <InputGroupInput
                                                         id="password"
                                                         name="password"
-                                                        type="password"
+                                                        type={showPassword ? 'text' : 'password'}
                                                         placeholder="Enter password"
+                                                        onFocus={() => setIsFocused(true)}
+                                                        onBlur={() => setIsFocused(false)}
+                                                        onDoubleClick={() => setShowPassword(!showPassword)}
 
 
                                                     />
-                                                    
+
                                                 </InputGroup>
+                                                {/* Only shows when the input is focused */}
+                                                {isFocused && (
+                                                    <p className="text-xs text-muted-foreground mt-1 animate-fade-in">
+                                                        💡 Double-click the box to {showPassword ? 'hide' : 'reveal'} password
+                                                    </p>
+                                                )}
 
                                                 {state?.errors?.password && <p className="text-red-400 mt-1 text-sm">{state.errors.password}</p>}
 
@@ -62,24 +73,24 @@ export default function Login() {
                                     <Field orientation="horizontal">
                                         <Button type="submit" aria-disabled={isPending}>Submit</Button>
 
-                                       
+
                                     </Field>
-                                   
+
 
                                     <div
                                         className="flex h-8 items-end space-x-1"
                                         aria-live="polite"
                                         aria-atomic="true"
                                     >
-                                       
 
-                                        
+
+
                                     </div>
 
                                 </FieldGroup>
                             </form>
-                            
-                         <SignIn/>
+
+                            <SignIn />
                         </div>
                         <span>
                             Not Registered yet? <a className="text-blue-400" href="/register">Register</a>

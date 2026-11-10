@@ -52,7 +52,7 @@ export default function Register() {
                     Register
                 </h1>
                 <div className="w-full  text-center sm:items-start sm:text-left">
-                    <div className="w-130 text-black dark:text-zinc-50 shadow-2xl p-8 shadow-mauve-600 rounded-2xl m-auto">
+                    <div className="lg:w-130 text-black dark:text-zinc-50 shadow-2xl p-8 shadow-mauve-600 rounded-2xl m-auto">
                         <div className="mt-15 mb-3 w-full h-full">
                             <form action={formAction} >
                                 <FieldGroup>
@@ -97,36 +97,36 @@ export default function Register() {
                                                 {formState?.errors?.username && <p className="text-red-400 mt-1 text-sm">{formState.errors.username}</p>}
                                             </Field>
                                             <Field>
-        <FieldLabel htmlFor="password">Password</FieldLabel>
-        <InputGroup className="flex flex-col">
-            <Input
-                id="password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Enter password"
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                onDoubleClick={() => setShowPassword(!showPassword)}
-                className="cursor-pointer"
-            />
-        </InputGroup>
-        
-        {/* Only shows when the input is focused */}
-        {isFocused && (
-            <p className="text-xs text-muted-foreground mt-1 animate-fade-in">
-                💡 Double-click the box to {showPassword ? 'hide' : 'reveal'} password
-            </p>
-        )}
+                                                <FieldLabel htmlFor="password">Password</FieldLabel>
+                                                <InputGroup className="flex flex-col">
+                                                    <Input
+                                                        id="password"
+                                                        name="password"
+                                                        type={showPassword ? 'text' : 'password'}
+                                                        placeholder="Enter password"
+                                                        onFocus={() => setIsFocused(true)}
+                                                        onBlur={() => setIsFocused(false)}
+                                                        onDoubleClick={() => setShowPassword(!showPassword)}
+                                                        className="cursor-pointer"
+                                                    />
+                                                </InputGroup>
 
-        {formState?.errors?.password && (
-            <div className="">
-                <p className="text-red-400 mt-1 text-sm">Password Must:</p>
-                {formState.errors.password.map((error, index) => (
-                    <p key={index} className="text-red-400 mt-1 text-sm">{error}</p>
-                ))}
-            </div>
-        )}
-    </Field>
+                                                {/* Only shows when the input is focused */}
+                                                {isFocused && (
+                                                    <p className="text-xs text-muted-foreground mt-1 animate-fade-in">
+                                                        💡 Double-click the box to {showPassword ? 'hide' : 'reveal'} password
+                                                    </p>
+                                                )}
+
+                                                {formState?.errors?.password && (
+                                                    <div className="">
+                                                        <p className="text-red-400 mt-1 text-sm">Password Must:</p>
+                                                        {formState.errors.password.map((error, index) => (
+                                                            <p key={index} className="text-red-400 mt-1 text-sm">{error}</p>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </Field>
                                             <FieldSet className="w-full">
                                                 <FieldLegend variant="label">Which Describes you the best:</FieldLegend>
                                                 <RadioGroup name="category" className="w-full">

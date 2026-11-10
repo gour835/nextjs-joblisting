@@ -4,3 +4,5 @@ allowBuilds:
 permissions:
   '@tanstack/react-table':
     skills: true
+  protobufjs:
+    build: true

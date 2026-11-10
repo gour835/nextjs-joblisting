@@ -9,7 +9,7 @@ MongoDB();
  
 // 1. Specify protected and public routes
 const protectedRoutes = ['/dashboard']
-const publicRoutes = ['/login', '/register']
+const publicRoutes = ['/login', '/register', '/']
  
 export default async function proxy(req: NextRequest) {
   // 2. Check if the current route is protected or public

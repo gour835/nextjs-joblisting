@@ -21,6 +21,7 @@ type CustomUser = {
 export default function Register() {
     const [showPassword, setShowPassword] = useState(false);
     const [isFocused, setIsFocused] = useState(false);
+    const [isRecruter, setIsRecruter] = useState(false);
     const [RegisterState, RegisterAction, RegisterIsPending] = useActionState(register, undefined);
     const [RegisterUpdateState, RegisterUpdateAction, RegisterUpdateIsPending] = useActionState(UpdateRegister, undefined);
     const { data, status } = useSession();
@@ -129,7 +130,20 @@ export default function Register() {
                                             </Field>
                                             <FieldSet className="w-full">
                                                 <FieldLegend variant="label">Which Describes you the best:</FieldLegend>
-                                                <RadioGroup name="category" className="w-full">
+                                                <RadioGroup
+                                                    onChange={(e) => {
+                                                        const value = e.target.value;
+                                                        console.log(value);
+
+                                                        if(value == 'recruiter'){
+                                                            setIsRecruter(true);
+                                                        }else{
+                                                            setIsRecruter(false);
+                                                        }
+
+                                                    }}
+                                                    name="category"
+                                                    className="w-full">
                                                     <FieldLabel htmlFor="developer">
                                                         <Field orientation="horizontal">
                                                             <FieldContent>
@@ -154,6 +168,22 @@ export default function Register() {
                                                 </RadioGroup>
                                                 {formState?.errors?.category && <p className="text-red-400 mt-1 text-sm">{formState.errors.category}</p>}
                                             </FieldSet>
+
+                                            {isRecruter && <Field>
+                                                <FieldLabel htmlFor="companyWebsite">
+                                                    Enter Company Website Link:
+                                                </FieldLabel>
+                                                <Input
+                                                    id="companyWebsite"
+                                                    name="companyWebsite"
+                                                    placeholder="john_doe_company.com"
+                                                    // disabled={status == 'authenticated' && !data?.user?.category ? true : false}
+                                                    // aria-disabled={status == 'authenticated' && !data?.user?.category ? true : false}
+                                                    aria-invalid={formState?.errors?.companyWebsite && true}
+                                                    
+                                                />
+                                                {formState?.errors?.companyWebsite && <p className="text-red-400 mt-1 text-sm">{formState.errors.companyWebsite}</p>}
+                                            </Field>}
 
 
                                         </FieldGroup>

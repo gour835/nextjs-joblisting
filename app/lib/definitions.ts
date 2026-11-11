@@ -1,4 +1,4 @@
-import {JWTPayload} from 'jose'
+import { JWTPayload } from 'jose'
 import * as z from "zod";
 import { CheckEmailRegistered, CheckUsernameRegistered } from "../action/auth";
 
@@ -23,7 +23,7 @@ export const RegisterFormSchema = z.object({
         })
         .trim(),
     category: z
-        .enum(['recruiter', 'developer'], {error: "Please choose One of the above choice, Recruter | Developer"}),
+        .enum(['recruiter', 'developer'], { error: "Please choose One of the above choice, Recruter | Developer" }),
     password: z
         .string()
         .min(8, { error: 'Be at least 8 characters long' })
@@ -33,8 +33,40 @@ export const RegisterFormSchema = z.object({
             error: 'Contain at least one special character.',
         })
         .trim(),
+    companyWebsite: z
+        .string()
+        .optional()
+}).superRefine((data, ctx) => {
+    if (data.category == 'recruiter') {
+        if (!data.companyWebsite || data.companyWebsite?.trim() == '') {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'Company website is required for Recruiters',
+                path: ['companyWebsite']
+            });
+        } else {
+            try {
+                if (data.companyWebsite) {
+                    new URL(data.companyWebsite);
+                } else {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: 'Please enter a valid URL',
+                        path: ['companyWebsite'],
+                    });
+                }
 
-})
+            } catch {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Please enter a valid URL',
+                    path: ['companyWebsite'],
+                });
+            }
+        }
+    }
+});
+
 
 export const RegisterUpdateSchema = z.object({
     username: z
@@ -48,7 +80,7 @@ export const RegisterUpdateSchema = z.object({
         })
         .trim(),
     category: z
-        .enum(['recruiter', 'developer'], {error: "Please choose One of the above choice, Recruter | Developer"}),
+        .enum(['recruiter', 'developer'], { error: "Please choose One of the above choice, Recruter | Developer" }),
     password: z
         .string()
         .min(8, { error: 'Be at least 8 characters long' })
@@ -58,6 +90,38 @@ export const RegisterUpdateSchema = z.object({
             error: 'Contain at least one special character.',
         })
         .trim(),
+    companyWebsite: z
+        .string()
+        .optional()
+}).superRefine((data, ctx) => {
+    if (data.category == 'recruiter') {
+        if (!data.companyWebsite || data.companyWebsite?.trim() == '') {
+            ctx.addIssue({
+                code: z.ZodIssueCode.custom,
+                message: 'Company website is required for Recruiters',
+                path: ['companyWebsite']
+            });
+        } else {
+            try {
+                if (data.companyWebsite) {
+                    new URL(data.companyWebsite);
+                } else {
+                    ctx.addIssue({
+                        code: z.ZodIssueCode.custom,
+                        message: 'Please enter a valid URL',
+                        path: ['companyWebsite'],
+                    });
+                }
+
+            } catch {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Please enter a valid URL',
+                    path: ['companyWebsite'],
+                });
+            }
+        }
+    }
 });
 
 export const loginFormSchema = z.object({
@@ -72,25 +136,28 @@ export const loginFormSchema = z.object({
 })
 
 export type FormState =
-  | {
-    errors?: {
-      name?: string[];
-      email?: string[];
-      username?: string[];
-      password?: string[];
+    | {
+        errors?: {
+            name?: string[];
+            email?: string[];
+            username?: string[];
+            category?: string[];
+            password?: string[];
+            companyWebsite?: string[];
+        }
+        message?: string;
+        fields?: {
+            email?: string;
+            category?: string;
+            companyWebsite?: string;
+            username?: string;
+        };
     }
-    message?: string;
-    fields?: {
-        email?: string;
-        category?: string;
-        username?: string;
-      };
-  }
-  | undefined
+    | undefined
 
-  export interface SessionPayload extends JWTPayload {
-  userId: string;
-  // You can optionally add other non-sensitive fields here, for example:
-  // email?: string;
-  // role?: 'user' | 'admin';
+export interface SessionPayload extends JWTPayload {
+    userId: string;
+    // You can optionally add other non-sensitive fields here, for example:
+    // email?: string;
+    // role?: 'user' | 'admin';
 }

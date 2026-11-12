@@ -15,34 +15,30 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon } from "lucide-react"
+import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon, LucidePersonStanding, PenSquareIcon } from "lucide-react"
+import { useSession } from "next-auth/react"
 
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+const NavData = {
   navMain: [
     {
       title: "Dashboard",
-      url: "#",
+      url: "/dashboard",
       icon: (
         <LayoutDashboardIcon
         />
       ),
     },
     {
-      title: "Lifecycle",
-      url: "#",
+      title: "jobs",
+      url: "/jobs",
       icon: (
-        <ListIcon
+        <PenSquareIcon
         />
       ),
     },
     {
       title: "Analytics",
-      url: "#",
+      url: "/ana",
       icon: (
         <ChartBarIcon
         />
@@ -50,7 +46,7 @@ const data = {
     },
     {
       title: "Projects",
-      url: "#",
+      url: "/pro",
       icon: (
         <FolderIcon
         />
@@ -63,63 +59,6 @@ const data = {
         <UsersIcon
         />
       ),
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: (
-        <CameraIcon
-        />
-      ),
-      isActive: true,
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Proposal",
-      icon: (
-        <FileTextIcon
-        />
-      ),
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Prompts",
-      icon: (
-        <FileTextIcon
-        />
-      ),
-      url: "#",
-      items: [
-        {
-          title: "Active Proposals",
-          url: "#",
-        },
-        {
-          title: "Archived",
-          url: "#",
-        },
-      ],
     },
   ],
   navSecondary: [
@@ -176,6 +115,13 @@ const data = {
   ],
 }
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const {data} = useSession();
+  const user = {
+    name: data?.user.name ?? '',
+    email: data?.user.email ?? '',
+    category: data?.user.category ?? '',
+    avatar: data?.user.image ?? 'avatar/shadcn.jpg'
+  }
   return (
     <Sidebar collapsible="offcanvas" {...props}>
       <SidebarHeader>
@@ -186,18 +132,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               render={<a href="#" />}
             >
               <CommandIcon className="size-5!" />
-              <span className="text-base font-semibold">Acme Inc.</span>
+              <span className="text-base font-semibold">Nextjs-JobListings.</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
+        <NavMain items={NavData.navMain} />
+        <NavDocuments items={NavData.documents} />
+        <NavSecondary items={NavData.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   )

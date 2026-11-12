@@ -34,14 +34,12 @@ export default function Register() {
 
     let emailDefault = formState?.fields?.email || (status === 'authenticated' ? user?.email || '' : '');
     let usernameDefault = formState?.fields?.username || (status === 'authenticated' ? user?.username || '' : '');
-
+    console.log(usernameDefault);
     if (status == 'authenticated' && !data?.user?.category) {
         if (data?.user?.email) {
-            console.log(data.user.email);
             emailDefault = data.user.email;
         }
         if (data?.user?.username) {
-            console.log(data.user.username);
             usernameDefault = data.user.username
         }
     }

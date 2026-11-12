@@ -31,6 +31,7 @@ export function NavUser({
     name: string
     email: string
     avatar: string
+    category: string
   }
 }) {
   const { isMobile } = useSidebar()
@@ -73,6 +74,9 @@ export function NavUser({
                     <span className="truncate text-xs text-muted-foreground">
                       {user.email}
                     </span>
+                    <span className="truncate text-xs text-muted-foreground">
+                      {user.category.toUpperCase()}
+                    </span>
                   </div>
                 </div>
               </DropdownMenuLabel>
@@ -102,7 +106,7 @@ export function NavUser({
               <LogOutIcon
               />
               
-             lll Log out
+             Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -15,10 +15,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon, LucidePersonStanding, PenSquareIcon } from "lucide-react"
+import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon, LucidePersonStanding, PenSquareIcon, Briefcase, BriefcaseBusiness, FileUser, FilePlusCorner, MessageSquare } from "lucide-react"
 import { useSession } from "next-auth/react"
+import Link from "next/link"
 
-const NavData = {
+const NavDataDeveloper = {
   navMain: [
     {
       title: "Dashboard",
@@ -29,37 +30,29 @@ const NavData = {
       ),
     },
     {
-      title: "jobs",
+      title: "Jobs",
       url: "/jobs",
       icon: (
-        <PenSquareIcon
+        <BriefcaseBusiness
         />
       ),
     },
     {
-      title: "Analytics",
-      url: "/ana",
+      title: "Applications",
+      url: "/applications",
       icon: (
-        <ChartBarIcon
+        <FileUser
         />
       ),
     },
     {
-      title: "Projects",
+      title: "Resume & ATS Analyser",
       url: "/pro",
       icon: (
-        <FolderIcon
+        <FilePlusCorner
         />
       ),
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: (
-        <UsersIcon
-        />
-      ),
-    },
+    }
   ],
   navSecondary: [
     {
@@ -77,41 +70,84 @@ const NavData = {
         <CircleHelpIcon
         />
       ),
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: (
-        <SearchIcon
-        />
-      ),
-    },
+    }
   ],
   documents: [
     {
-      name: "Data Library",
+      name: "Chat",
+      url: "/chat",
+      icon: (
+        <MessageSquare
+        />
+      ),
+    }
+  ],
+}
+
+
+const NavDataRecruiter = {
+  navMain: [
+    {
+      title: "Dashboard",
+      url: "/dashboard",
+      icon: (
+        <LayoutDashboardIcon
+        />
+      ),
+    },
+    {
+      title: "Job Listings",
+      url: "/job-listings",
+      icon: (
+        <PenSquareIcon
+        />
+      ),
+    },
+    {
+      title: "Talent Pool",
+      url: "/talent-pool",
+      icon: (
+        <ChartBarIcon
+        />
+      ),
+    },
+    {
+      title: "Interviews",
+      url: "/interviews",
+      icon: (
+        <FolderIcon
+        />
+      ),
+    }
+  ],
+  navSecondary: [
+    {
+      title: "Settings",
       url: "#",
+      icon: (
+        <Settings2Icon
+        />
+      ),
+    },
+    {
+      title: "Get Help",
+      url: "#",
+      icon: (
+        <CircleHelpIcon
+        />
+      ),
+    }
+  ],
+  documents: [
+    {
+      name: "Chat",
+      url: "/chat",
       icon: (
         <DatabaseIcon
         />
       ),
     },
-    {
-      name: "Reports",
-      url: "#",
-      icon: (
-        <FileChartColumnIcon
-        />
-      ),
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: (
-        <FileIcon
-        />
-      ),
-    },
+    
   ],
 }
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -129,18 +165,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton
               className="data-[slot=sidebar-menu-button]:p-1.5!"
-              render={<a href="#" />}
+              render={<Link href="/" />}
             >
               <CommandIcon className="size-5!" />
-              <span className="text-base font-semibold">Nextjs-JobListings.</span>
+              <span className="text-base font-semibold">Next-JobListings.</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={NavData.navMain} />
-        <NavDocuments items={NavData.documents} />
-        <NavSecondary items={NavData.navSecondary} className="mt-auto" />
+        <NavMain items={data?.user.category == 'developer'?NavDataDeveloper.navMain: NavDataRecruiter.navMain} />
+        <NavDocuments items={data?.user.category == 'developer'?NavDataDeveloper.documents: NavDataRecruiter.documents} />
+        <NavSecondary items={data?.user.category == 'developer'?NavDataDeveloper.navSecondary: NavDataRecruiter.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />

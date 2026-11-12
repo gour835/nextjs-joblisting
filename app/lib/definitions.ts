@@ -147,10 +147,10 @@ export type FormState =
         }
         message?: string;
         fields?: {
-            email?: string;
-            category?: string;
+            email?: string | null;
+            category?: string | null;
             companyWebsite?: string;
-            username?: string;
+            username?: string | null;
         };
     }
     | undefined

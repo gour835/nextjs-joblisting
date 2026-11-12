@@ -73,11 +73,11 @@ export default function Register() {
                                                     disabled={status == 'authenticated' && !data?.user?.category ? true : false}
                                                     aria-disabled={status == 'authenticated' && !data?.user?.category ? true : false}
                                                     className={status == 'authenticated' && !data?.user?.category ? 'hover:cursor-no-drop' : ''}
-                                                    aria-invalid={formState?.errors?.email && true}
+                                                    aria-invalid={formState?.errors && 'email' in formState.errors && formState.errors.email && true}
                                                     required
                                                 />
 
-                                                {formState?.errors?.email && <p className="text-red-400 mt-1 text-sm">{formState.errors.email}</p>}
+                                                {formState?.errors && 'email' in formState.errors && formState.errors.email && <p className="text-red-400 mt-1 text-sm">{formState.errors.email}</p>}
                                             </Field>
 
                                             <Field>
@@ -92,10 +92,10 @@ export default function Register() {
                                                     defaultValue={usernameDefault}
                                                     // disabled={status == 'authenticated' && !data?.user?.category ? true : false}
                                                     // aria-disabled={status == 'authenticated' && !data?.user?.category ? true : false}
-                                                    aria-invalid={formState?.errors?.username && true}
+                                                    aria-invalid={formState?.errors && 'username' in formState.errors && formState.errors.username && true}
                                                     required
                                                 />
-                                                {formState?.errors?.username && <p className="text-red-400 mt-1 text-sm">{formState.errors.username}</p>}
+                                                {formState?.errors && 'username' in formState.errors && formState.errors.username && <p className="text-red-400 mt-1 text-sm">{formState.errors.username}</p>}
                                             </Field>
                                             <Field>
                                                 <FieldLabel htmlFor="password">Password</FieldLabel>
@@ -119,7 +119,7 @@ export default function Register() {
                                                     </p>
                                                 )}
 
-                                                {formState?.errors?.password && (
+                                                {formState?.errors && 'password' in formState.errors && formState.errors.password && (
                                                     <div className="">
                                                         <p className="text-red-400 mt-1 text-sm">Password Must:</p>
                                                         {formState.errors.password.map((error, index) => (
@@ -131,13 +131,11 @@ export default function Register() {
                                             <FieldSet className="w-full">
                                                 <FieldLegend variant="label">Which Describes you the best:</FieldLegend>
                                                 <RadioGroup
-                                                    onChange={(e) => {
-                                                        const value = e.target.value;
+                                                    onValueChange={(value) => {
                                                         console.log(value);
-
-                                                        if(value == 'recruiter'){
+                                                        if (value == 'recruiter') {
                                                             setIsRecruter(true);
-                                                        }else{
+                                                        } else {
                                                             setIsRecruter(false);
                                                         }
 
@@ -166,7 +164,9 @@ export default function Register() {
                                                     </FieldLabel>
 
                                                 </RadioGroup>
-                                                {formState?.errors?.category && <p className="text-red-400 mt-1 text-sm">{formState.errors.category}</p>}
+                                                {formState?.errors && 'category' in formState.errors && formState.errors.category && (
+                                                    <p className="text-red-400 mt-1 text-sm">{formState.errors.category}</p>
+                                                )}
                                             </FieldSet>
 
                                             {isRecruter && <Field>
@@ -180,7 +180,7 @@ export default function Register() {
                                                     // disabled={status == 'authenticated' && !data?.user?.category ? true : false}
                                                     // aria-disabled={status == 'authenticated' && !data?.user?.category ? true : false}
                                                     aria-invalid={formState?.errors?.companyWebsite && true}
-                                                    
+                                                    required
                                                 />
                                                 {formState?.errors?.companyWebsite && <p className="text-red-400 mt-1 text-sm">{formState.errors.companyWebsite}</p>}
                                             </Field>}

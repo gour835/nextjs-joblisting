@@ -8,17 +8,18 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { BellCheckIcon, BellDot, BellIcon, BellMinus, CirclePlusIcon } from "lucide-react"
+import { ArrowBigLeft, ArrowBigRight, ArrowBigRightDash, BellCheckIcon, BellDot, BellIcon, BellMinus, CirclePlusIcon } from "lucide-react"
 import Link from "next/link"
 
 export function NavMain({
-  items,
+  items, title
 }: {
   items: {
     title: string
     url: string
     icon?: React.ReactNode
-  }[]
+  }[];
+  title: string
 }) {
   return (
     <SidebarGroup>
@@ -29,9 +30,9 @@ export function NavMain({
               tooltip="Quick Create"
               className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
             >
-              <CirclePlusIcon
+              <ArrowBigRightDash
               />
-              <span>Quick Create</span>
+              <span>{title} Jobs</span>
             </SidebarMenuButton>
             <Button
               size="icon"

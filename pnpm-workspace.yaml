@@ -2,7 +2,13 @@ allowBuilds:
   bcrypt: false
   unrs-resolver: false
 permissions:
+  '@prisma/orm-postgres':
+    skills: true
   '@tanstack/react-table':
+    skills: true
+  esbuild:
+    build: true
+  prisma:
     skills: true
   protobufjs:
     build: true

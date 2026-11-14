@@ -15,7 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon, LucidePersonStanding, PenSquareIcon, Briefcase, BriefcaseBusiness, FileUser, FilePlusCorner, MessageSquare } from "lucide-react"
+import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon, LucidePersonStanding, PenSquareIcon, Briefcase, BriefcaseBusiness, FileUser, FilePlusCorner, MessageSquare, ClipboardList, UserSearch, CalendarClock } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 
@@ -99,7 +99,7 @@ const NavDataRecruiter = {
       title: "Job Listings",
       url: "/job-listings",
       icon: (
-        <PenSquareIcon
+        <ClipboardList
         />
       ),
     },
@@ -107,7 +107,7 @@ const NavDataRecruiter = {
       title: "Talent Pool",
       url: "/talent-pool",
       icon: (
-        <ChartBarIcon
+        <UserSearch
         />
       ),
     },
@@ -115,7 +115,7 @@ const NavDataRecruiter = {
       title: "Interviews",
       url: "/interviews",
       icon: (
-        <FolderIcon
+        <CalendarClock
         />
       ),
     }
@@ -143,15 +143,15 @@ const NavDataRecruiter = {
       name: "Chat",
       url: "/chat",
       icon: (
-        <DatabaseIcon
+        <MessageSquare
         />
       ),
     },
-    
+
   ],
 }
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const {data} = useSession();
+  const { data } = useSession();
   const user = {
     name: data?.user.name ?? '',
     email: data?.user.email ?? '',
@@ -174,9 +174,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data?.user.category == 'developer'?NavDataDeveloper.navMain: NavDataRecruiter.navMain} />
-        <NavDocuments items={data?.user.category == 'developer'?NavDataDeveloper.documents: NavDataRecruiter.documents} />
-        <NavSecondary items={data?.user.category == 'developer'?NavDataDeveloper.navSecondary: NavDataRecruiter.navSecondary} className="mt-auto" />
+        <NavMain
+          items={data?.user.category == 'developer' ? NavDataDeveloper.navMain : NavDataRecruiter.navMain}
+          title={data?.user.category == 'developer' ? 'Browse' : 'Create'}
+        />
+        <NavDocuments items={data?.user.category == 'developer' ? NavDataDeveloper.documents : NavDataRecruiter.documents} />
+        <NavSecondary items={data?.user.category == 'developer' ? NavDataDeveloper.navSecondary : NavDataRecruiter.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={user} />

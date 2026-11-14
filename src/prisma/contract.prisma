@@ -1,0 +1,18 @@
+// use prisma-8
+// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+namespace public {
+  model User {
+    id             Uuid                    @id(map: "user_pkey") @default(sql `gen_random_uuid()`)
+    email          String                 @unique(map: "user_email_key")
+    username       String?
+    password       String
+    category       String?
+    companyWebsite String?
+    image          String?
+    createdAt      DateTime(precision: 6) @default(now()) @map("created_at")
+    
+    @@map("user")
+  }
+
+ 
+}

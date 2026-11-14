@@ -2,11 +2,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { auth } from './auth'
-import Users from './models/user.model'
-import MongoDB from './config/mongoDB.config'
 
-MongoDB();
- 
 // 1. Specify protected and public routes
 const protectedRoutes = ['/dashboard']
 const publicRoutes = ['/login', '/register', '/']

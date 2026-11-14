@@ -7,7 +7,7 @@ interface UserProps{
 }
 export default async function page() {
     const UserResponse = await getUsers();
-
+    
     if (!UserResponse.success){
         console.log(UserResponse?.error);
     }else{

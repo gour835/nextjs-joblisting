@@ -5,6 +5,7 @@ import Users from "@/models/user.model";
 import { FormState, loginFormSchema, RegisterFormSchema, RegisterUpdateSchema } from "../lib/definitions";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
+import { db } from "@/src/prisma/db";
 
 
 MongoDB()
@@ -41,7 +42,7 @@ export async function login(state: FormState, formData: FormData) {
 
     const { email, password } = validate.data
 
-    const user = await Users.findOne({ email });
+    const user = await db.orm.public.User.where({ email }).first();
     if (!user) {
         return {
             errors: { email: ['Invalid Email Address.'] },
@@ -71,13 +72,13 @@ export async function register(state: FormState, formData: FormData) {
     const rawUsername = formData.get('username');
     const rawCategory = formData.get('category');
     const rawPassword = formData.get('password');
-     const rawWebsite = formData.get('companyWebsite');
-     
-     const emailStr = typeof rawEmail == 'string' ? rawEmail : ''
-     const usernameStr = typeof rawUsername == 'string' ? rawUsername : ''
-     const categoryStr = typeof rawCategory == 'string' ? rawCategory : ''
-     const passwrodStr = typeof rawPassword == 'string' ? rawPassword : ''
-     const websiteStr = typeof rawWebsite == 'string' ? rawWebsite : '';
+    const rawWebsite = formData.get('companyWebsite');
+
+    const emailStr = typeof rawEmail == 'string' ? rawEmail : ''
+    const usernameStr = typeof rawUsername == 'string' ? rawUsername : ''
+    const categoryStr = typeof rawCategory == 'string' ? rawCategory : ''
+    const passwrodStr = typeof rawPassword == 'string' ? rawPassword : ''
+    const websiteStr = typeof rawWebsite == 'string' ? rawWebsite : '';
 
     const validate = await RegisterFormSchema.safeParseAsync({
         email: emailStr,
@@ -90,7 +91,7 @@ export async function register(state: FormState, formData: FormData) {
     if (!validate.success) {
         return {
             errors: validate.error.flatten().fieldErrors,
-            fields: { email: emailStr, username: usernameStr, category: categoryStr, companyWebsite: websiteStr}
+            fields: { email: emailStr, username: usernameStr, category: categoryStr, companyWebsite: websiteStr }
         }
     }
 
@@ -98,7 +99,7 @@ export async function register(state: FormState, formData: FormData) {
 
     const { email, username, category, password, companyWebsite } = validate.data
 
-    const userEmail = await Users.findOne({ email });
+    const userEmail = await db.orm.public.User.first({ email });
     if (userEmail) {
         return {
             errors: { email: ['Email Address Already In Use.'] },
@@ -106,7 +107,7 @@ export async function register(state: FormState, formData: FormData) {
         }
     }
 
-    const userUsername = await Users.findOne({ username });
+    const userUsername = await db.orm.public.User.first({ username });
     if (userUsername) {
         return {
             errors: { username: ['This Username is Taken.'] },
@@ -114,18 +115,18 @@ export async function register(state: FormState, formData: FormData) {
         }
     }
 
-    if(category == 'recruiter'){
-        if(!companyWebsite || companyWebsite == ''){
+    if (category == 'recruiter') {
+        if (!companyWebsite || companyWebsite == '') {
             return {
-            errors: { companyWebsite: ['company website is required to verification'] },
-            fields: { email, username, category, companyWebsite }
-        }
+                errors: { companyWebsite: ['company website is required to verification'] },
+                fields: { email, username, category, companyWebsite }
+            }
         }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await Users.create({
+    await db.orm.public.User.create({
         email,
         username,
         category,
@@ -174,24 +175,29 @@ export async function UpdateRegister(state: FormState, formData: FormData) {
             fields: { username, category, companyWebsite }
         }
     }
- if(category == 'recruiter'){
-        if(!companyWebsite || companyWebsite == ''){
+    if (category == 'recruiter') {
+        if (!companyWebsite || companyWebsite == '') {
             return {
-            errors: { companyWebsite: ['company website is required to verification'] },
-            fields: { email: Session?.user?.email, username, category, companyWebsite }
-        }
+                errors: { companyWebsite: ['company website is required to verification'] },
+                fields: { email: Session?.user?.email, username, category, companyWebsite }
+            }
         }
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await Users.findOneAndUpdate({ email: Session?.user.email }, { $set: { category, username, companyWebsite, password: hashedPassword } }, {
-        returnDocument: 'after', // Returns the modified document
-        runValidators: true      // Ensures updates respect schema rules
+    const user = await db.orm.public.User.where({
+        email: Session?.user?.email
+    }).update({
+        category,
+        username,
+        companyWebsite,
+        password: hashedPassword,
     });
+
     console.log(user);
 
-    Session.user.category = user.category;
+    Session.user.category = user?.category;
 
     console.log(Session.user.category);
 
@@ -199,10 +205,10 @@ export async function UpdateRegister(state: FormState, formData: FormData) {
 
 }
 export async function CheckEmailRegistered(email: string) {
-    const user = await Users.findOne({ email });
+    const user = await db.orm.public.User.first({ email });
     return !!user
 }
 export async function CheckUsernameRegistered(username: string) {
-    const user = await Users.findOne({ username });
+    const user = await db.orm.public.User.first({ username });
     return !!user
 }

@@ -1,9 +1,9 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
-import Users from "./models/user.model"
 import MongoDB from "./config/mongoDB.config"
 import bcrypt from "bcryptjs"
+import { db } from "./src/prisma/db"
 
 MongoDB()
 
@@ -18,14 +18,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       password: { label: 'Password', type: 'password' }
     },
     async authorize(credentials) {
-      const user = await Users.findOne({ email: credentials.email })
+      const user = await db.orm.public.User.where({ email: credentials.email as string }).first()
       if (!user) return null
 
       const validate = await bcrypt.compare(credentials.password as string, user.password);
       if (!validate) return null
 
       return {
-        id: user._id,
+        id: user.id,
         email: user.email,
         password: user.password,
         image: user.image || null
@@ -36,24 +36,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async signIn({ user, account }) {
       if (account?.provider === "google") {
         try {
-          const existing_user = await Users.findOne({ email: user.email });
+          const existing_user = await db.orm.public.User.where({ email: user.email as string }).first();
           if (!existing_user) {
             const hashedPassword = await bcrypt.hash('google_password', 10);
-            await Users.create({
-              email: user.email,
+            await db.orm.public.User.create({
+              email: user.email || '',
               password: hashedPassword,
-              image: user.image
+              image: user.image || ''
             })
-            // await Users.create({
-            //   email: user.email,
-            //   password: hashedPassword,
-            //   image: user.image,
-            //   username: user.email?.split('@')[0] || "user",
-            //   category: "general" // <-- Provide a default category so it doesn't fail!
-            // });
+
           } else if (!existing_user.image && user.image) {
-            existing_user.image = user.image;
-            await existing_user.save()
+            await db.orm.public.User.where({ email: user.email as string }).update({
+              image: user.image
+            });
           }
         } catch (error) {
           console.log('Error in signIn Auth ./', error)
@@ -65,7 +60,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async session({ session, token }) {
       if (session.user) {
         // category and username
-        const dbUser = await Users.findOne({ email: session.user.email }).select('category username');
+        const dbUser = await db.orm.public.User.where({ email: session.user.email }).select("category", "username").first();
         if (dbUser) {
           session.user.category = dbUser.category;
           session.user.username = dbUser.username;

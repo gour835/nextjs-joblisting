@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/sidebar"
 import { ArrowBigLeft, ArrowBigRight, ArrowBigRightDash, BellCheckIcon, BellDot, BellIcon, BellMinus, CirclePlusIcon } from "lucide-react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export function NavMain({
   items, title
@@ -21,6 +22,7 @@ export function NavMain({
   }[];
   title: string
 }) {
+  const path = usePathname();
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -48,7 +50,7 @@ export function NavMain({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title} render={<Link href={item.url}/>}>
+              <SidebarMenuButton tooltip={item.title} render={<Link href={item.url} className={`${path == item.url && 'dark:bg-gray-600 bg-gray-400'}`}/>}>
                 {item.icon}
                 <span>{item.title}</span>
               </SidebarMenuButton>

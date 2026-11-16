@@ -25,7 +25,7 @@ namespace public {
 
   model JobListings {
     id         Uuid                    @id(map: "joblisting_pkey") @default(sql`gen_random_uuid()`)
-    jobId      Uuid                      @map("job_idz")
+    jobId      Uuid                      @map("job_id")
     job        Jobs                      @relation(fields: [jobId], references: [id])
     categories CategoriesOnJobListings[]
     createdAt  DateTime(precision: 6)    @default(now()) @map("created_at")

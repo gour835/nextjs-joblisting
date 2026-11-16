@@ -1,14 +1,11 @@
 'use server';
 import { auth, signIn, signOut } from "@/auth";
-import MongoDB from "@/config/mongoDB.config";
-import Users from "@/models/user.model";
 import { FormState, loginFormSchema, RegisterFormSchema, RegisterUpdateSchema } from "../lib/definitions";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { db } from "@/src/prisma/db";
 
 
-MongoDB()
 
 export async function logout() {
     await signOut({ redirectTo: '/' });

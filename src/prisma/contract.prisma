@@ -2,7 +2,7 @@
 // Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
 namespace public {
   model User {
-    id             Uuid                    @id(map: "user_pkey") @default(sql `gen_random_uuid()`)
+    id             Uuid                   @id(map: "user_pkey") @default(sql`gen_random_uuid()`)
     email          String                 @unique(map: "user_email_key")
     username       String?
     password       String
@@ -10,9 +10,41 @@ namespace public {
     companyWebsite String?
     image          String?
     createdAt      DateTime(precision: 6) @default(now()) @map("created_at")
-    
+    updatedAt      DateTime(precision: 6) @default(now()) @map("updated_at")
+
     @@map("user")
   }
 
- 
+  model Jobs {
+    id          Uuid                   @id(map: "jobs_pkey") @default(sql`gen_random_uuid()`)
+    title       String                 @unique(map: "jobs_title_key")
+    jobListings JobListings[]
+    createdAt   DateTime(precision: 6) @default(now()) @map("created_at")
+    updatedAt   DateTime(precision: 6) @default(now()) @map("updated_at")
+  }
+
+  model JobListings {
+    id         Uuid                    @id(map: "joblisting_pkey") @default(sql`gen_random_uuid()`)
+    jobId      Uuid                      @map("job_id")
+    job        Jobs                      @relation(fields: [jobId], references: [id])
+    categories CategoriesOnJobListings[]
+    createdAt  DateTime(precision: 6)    @default(now()) @map("created_at")
+    updatedAt  DateTime(precision: 6)    @default(now()) @map("updated_at")
+  }
+
+  model Category {
+    id          Uuid                    @id(map: "category_pkey") @default(sql`gen_random_uuid()`)
+    name        String                    @unique(map: "category_name_key")
+    jobListings CategoriesOnJobListings[]
+    createdAt   DateTime(precision: 6)    @default(now()) @map("created_at")
+    updatedAt   DateTime(precision: 6)    @default(now()) @map("updated_at")
+  }
+
+  model CategoriesOnJobListings {
+    categoryId    Uuid
+    category      Category    @relation(fields: [categoryId], references: [id])
+    jobListingsId Uuid
+    jobListings   JobListings @relation(fields: [jobListingsId], references: [id])
+    @@id([categoryId, jobListingsId])
+  }
 }

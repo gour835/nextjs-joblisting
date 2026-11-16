@@ -1,11 +1,8 @@
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import Credentials from "next-auth/providers/credentials"
-import MongoDB from "./config/mongoDB.config"
 import bcrypt from "bcryptjs"
 import { db } from "./src/prisma/db"
-
-MongoDB()
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google({

@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'3eb854dc664df7181e2e91d97c453ccd35cd33aecf4f2975496b0e347bad28c1'>;
+  StorageHashBase<'0e09726e4d56908ee74c066382b8ea2ffa9f356574c0a8c21117fa88d89f79e8'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -325,12 +325,14 @@ export namespace Models {
   };
   export type public_JobListings = {
     createdAt: FieldOutputTypes['public']['JobListings']['createdAt'];
+    description: FieldOutputTypes['public']['JobListings']['description'];
     id: FieldOutputTypes['public']['JobListings']['id'];
     jobId: FieldOutputTypes['public']['JobListings']['jobId'];
     updatedAt: FieldOutputTypes['public']['JobListings']['updatedAt'];
     categories: public_CategoriesOnJobListings[];
     job: public_Jobs;
-    readonly [RelationKeys]?: 'categories' | 'job';
+    tags: public_TagsOnJobListings[];
+    readonly [RelationKeys]?: 'categories' | 'job' | 'tags';
   };
   export type public_Jobs = {
     createdAt: FieldOutputTypes['public']['Jobs']['createdAt'];
@@ -339,6 +341,19 @@ export namespace Models {
     updatedAt: FieldOutputTypes['public']['Jobs']['updatedAt'];
     jobListings: public_JobListings[];
     readonly [RelationKeys]?: 'jobListings';
+  };
+  export type public_Tags = {
+    id: FieldOutputTypes['public']['Tags']['id'];
+    title: FieldOutputTypes['public']['Tags']['title'];
+    jobListings: public_TagsOnJobListings[];
+    readonly [RelationKeys]?: 'jobListings';
+  };
+  export type public_TagsOnJobListings = {
+    jobListingId: FieldOutputTypes['public']['TagsOnJobListings']['jobListingId'];
+    tagId: FieldOutputTypes['public']['TagsOnJobListings']['tagId'];
+    jobListing: public_JobListings;
+    tag: public_Tags;
+    readonly [RelationKeys]?: 'jobListing' | 'tag';
   };
   export type public_User = {
     category: FieldOutputTypes['public']['User']['category'];
@@ -360,6 +375,8 @@ export declare const models: {
     Category: Models.public_Category;
     JobListings: Models.public_JobListings;
     Jobs: Models.public_Jobs;
+    Tags: Models.public_Tags;
+    TagsOnJobListings: Models.public_TagsOnJobListings;
     User: Models.public_User;
   };
 };
@@ -492,6 +509,12 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 6 };
                   readonly many: false;
                 };
+                readonly description: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
                 readonly id: {
                   readonly dataType: 'pg/uuid';
                   readonly codecId: 'pg/uuid@1';
@@ -583,6 +606,90 @@ type ContractBase = Omit<
               ];
               indexes: readonly [];
               foreignKeys: readonly [];
+            };
+            readonly Tags: {
+              columns: {
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'gen_random_uuid()';
+                  };
+                  readonly many: false;
+                };
+                readonly title: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id']; readonly name: 'tags_pkey' };
+              uniques: readonly [
+                { readonly columns: readonly ['title']; readonly name: 'tags_title_key' },
+              ];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly TagsOnJobListings: {
+              columns: {
+                readonly jobListingId: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly tagId: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['jobListingId', 'tagId'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'TagsOnJobListings_jobListingId_idx_3a0b1b0c';
+                  readonly prefix: 'TagsOnJobListings_jobListingId_idx';
+                  readonly columns: readonly ['jobListingId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'TagsOnJobListings_tagId_idx_86854244';
+                  readonly prefix: 'TagsOnJobListings_tagId_idx';
+                  readonly columns: readonly ['tagId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'TagsOnJobListings';
+                    readonly columns: readonly ['jobListingId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'JobListings';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'TagsOnJobListings';
+                    readonly columns: readonly ['tagId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'Tags';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
             };
             readonly user: {
               columns: {
@@ -677,6 +784,11 @@ type ContractBase = Omit<
       readonly model: 'JobListings';
     };
     readonly Jobs: { readonly namespace: 'public' & NamespaceId; readonly model: 'Jobs' };
+    readonly Tags: { readonly namespace: 'public' & NamespaceId; readonly model: 'Tags' };
+    readonly TagsOnJobListings: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'TagsOnJobListings';
+    };
     readonly user: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
   };
   readonly domain: {
@@ -790,6 +902,10 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 6 };
                 };
               };
+              readonly description: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly id: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
@@ -828,12 +944,24 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly tags: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'TagsOnJobListings';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['jobListingId'];
+                };
+              };
             };
             readonly storage: {
               readonly table: 'JobListings';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly createdAt: { readonly column: 'created_at' };
+                readonly description: { readonly column: 'description' };
                 readonly id: { readonly column: 'id' };
                 readonly jobId: { readonly column: 'job_id' };
                 readonly updatedAt: { readonly column: 'updated_at' };
@@ -888,6 +1016,82 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly title: { readonly column: 'title' };
                 readonly updatedAt: { readonly column: 'updated_at' };
+              };
+            };
+          };
+          readonly Tags: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly title: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly jobListings: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'TagsOnJobListings';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['tagId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'Tags';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly title: { readonly column: 'title' };
+              };
+            };
+          };
+          readonly TagsOnJobListings: {
+            readonly fields: {
+              readonly jobListingId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly tagId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+            };
+            readonly relations: {
+              readonly jobListing: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'JobListings';
+                };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['jobListingId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly tag: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Tags' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['tagId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'TagsOnJobListings';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly jobListingId: { readonly column: 'jobListingId' };
+                readonly tagId: { readonly column: 'tagId' };
               };
             };
           };

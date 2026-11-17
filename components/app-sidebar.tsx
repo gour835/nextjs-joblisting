@@ -15,7 +15,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon, LucidePersonStanding, PenSquareIcon, Briefcase, BriefcaseBusiness, FileUser, FilePlusCorner, MessageSquare, ClipboardList, UserSearch, CalendarClock } from "lucide-react"
+import { LayoutDashboardIcon, ListIcon, ChartBarIcon, FolderIcon, UsersIcon, CameraIcon, FileTextIcon, Settings2Icon, CircleHelpIcon, SearchIcon, DatabaseIcon, FileChartColumnIcon, FileIcon, CommandIcon, LucidePersonStanding, PenSquareIcon, Briefcase, BriefcaseBusiness, FileUser, FilePlusCorner, MessageSquare, ClipboardList, UserSearch, CalendarClock, UserCircle } from "lucide-react"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
 
@@ -60,6 +60,14 @@ const NavDataDeveloper = {
       url: "#",
       icon: (
         <Settings2Icon
+        />
+      ),
+    },
+    {
+      title: "Profile",
+      url: "/profile",
+      icon: (
+        <UserCircle
         />
       ),
     },
@@ -126,6 +134,14 @@ const NavDataRecruiter = {
       url: "#",
       icon: (
         <Settings2Icon
+        />
+      ),
+    },
+    {
+      title: "Profile",
+      url: "/profile",
+      icon: (
+        <UserCircle
         />
       ),
     },

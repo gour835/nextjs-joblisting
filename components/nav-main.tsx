@@ -50,7 +50,7 @@ export function NavMain({
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton tooltip={item.title} render={<Link href={item.url} className={`${path == item.url && 'dark:bg-gray-600 bg-gray-400'}`}/>}>
+              <SidebarMenuButton tooltip={item.title} render={<Link href={item.url} className={`${path == item.url && 'dark:bg-gray-600 bg-gray-400 hover:bg-gray-600'}`}/>}>
                 {item.icon}
                 <span>{item.title}</span>
               </SidebarMenuButton>

@@ -23,21 +23,37 @@ namespace public {
     updatedAt   DateTime(precision: 6) @default(now()) @map("updated_at")
   }
 
+  model Tags {
+    id          Uuid                @id(map: "tags_pkey") @default(sql`gen_random_uuid()`)
+    title       String              @unique(map: "tags_title_key")
+    jobListings TagsOnJobListings[]
+  }
+
   model JobListings {
-    id         Uuid                    @id(map: "joblisting_pkey") @default(sql`gen_random_uuid()`)
+    id         Uuid                      @id(map: "joblisting_pkey") @default(sql`gen_random_uuid()`)
     jobId      Uuid                      @map("job_id")
     job        Jobs                      @relation(fields: [jobId], references: [id])
+    tags       TagsOnJobListings[]
     categories CategoriesOnJobListings[]
     createdAt  DateTime(precision: 6)    @default(now()) @map("created_at")
     updatedAt  DateTime(precision: 6)    @default(now()) @map("updated_at")
   }
 
   model Category {
-    id          Uuid                    @id(map: "category_pkey") @default(sql`gen_random_uuid()`)
+    id          Uuid                      @id(map: "category_pkey") @default(sql`gen_random_uuid()`)
     name        String                    @unique(map: "category_name_key")
     jobListings CategoriesOnJobListings[]
     createdAt   DateTime(precision: 6)    @default(now()) @map("created_at")
     updatedAt   DateTime(precision: 6)    @default(now()) @map("updated_at")
+  }
+
+  model TagsOnJobListings {
+    jobListingId Uuid       
+    jobListing   JobListings @relation(fields: [jobListingId], references: [id], onDelete: Cascade)
+    tagId        Uuid       
+    tag          Tags        @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+    @@id([jobListingId, tagId])
   }
 
   model CategoriesOnJobListings {
@@ -45,6 +61,7 @@ namespace public {
     category      Category    @relation(fields: [categoryId], references: [id])
     jobListingsId Uuid
     jobListings   JobListings @relation(fields: [jobListingsId], references: [id])
+
     @@id([categoryId, jobListingsId])
   }
 }

@@ -11,7 +11,6 @@ export default async function page() {
   const JobListingsResponse = await getJobs();
   const jobs = JobListingsResponse.success ? JobListingsResponse.jobListings : [];
   const jobsTotal = JobListingsResponse.success ? JobListingsResponse.total : 1;
-  console.log(jobsTotal)
 
   return (
     <>

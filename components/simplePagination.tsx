@@ -39,6 +39,7 @@ export default function SimplePagination({ total = 1 }) {
         if (active >= total) return;
         const newPage = active + 1;
         setActive(newPage);
+        setInput(newPage);
         replace(`${pathname}?${createQueryString('page', newPage)}`);
     };
 
@@ -46,6 +47,7 @@ export default function SimplePagination({ total = 1 }) {
         if (active <= 1) return;
         const newPage = active - 1;
         setActive(newPage);
+        setInput(newPage)
 
         const params = new URLSearchParams(searchParams.toString());
         if (newPage === 1) {
@@ -83,7 +85,7 @@ export default function SimplePagination({ total = 1 }) {
                         <PaginationPrevious onClick={prev} />
                     </PaginationItem>
 
-                    <div className="flex flex-row gap-2.5 px-1 my-1.5 justify-center items-center bg-gray-800 p-1 rounded-2xl">
+                    <div className="text-white flex flex-row gap-2.5 px-1 my-1.5 justify-center items-center bg-gray-800 p-1 rounded-2xl">
 
                         <Field orientation="horizontal" className="w-fit">
                             <FieldLabel htmlFor="select-rows-per-page">Page No:</FieldLabel>

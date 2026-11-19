@@ -1,5 +1,18 @@
 // use prisma-8
-// Contract inferred from the live database schema. Edit as needed, then run `prisma contract emit`.
+// Contract inferred from the live database schema. Edit as needed, 
+// then run 
+// `prisma contract emit`  
+// `prisma db update` (for prisma 8)  
+enum JobListingsType {
+  @@type("pg/text@1")
+  Internship = "INTERNSHIP"
+  FullTime = "FULL-TIME"
+  PartTime = "PART-TIME"
+  WorkFromHome = "WORK-FROM-HOME"
+  Remote = "REMOTE"
+  Hybrid = "HYBRID"
+}
+
 namespace public {
   model User {
     id             Uuid                   @id(map: "user_pkey") @default(sql`gen_random_uuid()`)
@@ -13,6 +26,26 @@ namespace public {
     updatedAt      DateTime(precision: 6) @default(now()) @map("updated_at")
 
     @@map("user")
+  }
+
+  model CandidateDetails {
+    id                Uuid     @id(map: "candidatedetials_pkey") @default(sql`gen_random_uuid()`)
+    userId            Uuid
+    user              User     @relation(fields: [userId], references: [id])
+    description       String
+    skills            String[]
+    experianceInYears Int?
+    experianceDetails Json
+    resume            Json
+  }
+
+  model RecruiterDetails {
+    id              Uuid     @id(map: "recruiterdetiils_pkey") @default(sql`gen_random_uuid()`)
+    userId          Uuid 
+    description     String
+    location        String[]
+    jobsListed      Int?
+    candidatesHired Int?
   }
 
   model Jobs {
@@ -34,6 +67,10 @@ namespace public {
     jobId       Uuid                      @map("job_id")
     job         Jobs                      @relation(fields: [jobId], references: [id])
     description String
+    type        JobListingsType           @default(FullTime)
+    location    String?
+    payment     Int
+    currency    String
     tags        TagsOnJobListings[]
     categories  CategoriesOnJobListings[]
     createdAt   DateTime(precision: 6)    @default(now()) @map("created_at")

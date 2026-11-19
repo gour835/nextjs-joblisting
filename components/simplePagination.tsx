@@ -10,7 +10,6 @@ import { useDebouncedCallback } from 'use-debounce';
 
 export default function SimplePagination({ total = 1 }) {
     const searchParams = useSearchParams();
-    const params = new URLSearchParams(searchParams);
     const pathname = usePathname();
     const { replace } = useRouter();
     const [active, setActive] = useState(() => {

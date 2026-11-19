@@ -2,7 +2,7 @@
 
 import { db } from "@/src/prisma/db"
 
-export async function getJobs(page = 1) {
+export async function getJobs(page: number) {
     try {
         const pageSize = 20;
         const offset = (page - 1) * pageSize;

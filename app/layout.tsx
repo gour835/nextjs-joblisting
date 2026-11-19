@@ -5,8 +5,9 @@ import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import BlurredBackground from "@/components/blurBackground";
 import { ThemeProvider } from "@/components/theme-providor";
-import { Toaster } from "@/components/ui/toast";
+
 import Providers from "@/components/providers";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 

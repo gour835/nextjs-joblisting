@@ -1,10 +1,34 @@
+'use client'
 import { AppSidebar } from "@/components/app-sidebar"
 import { SectionCards } from "@/components/section-cards"
 import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
+import { useSession } from "next-auth/react"
+import { useEffect, useRef } from "react"
+import isProfileUpdated from "../action/profile"
+import { toast } from "sonner"
+
 
 
 export default function Page() {
+  const {data, status} = useSession()
+  const hasChecked = useRef(false);
+
+  useEffect(() => {
+    const email = data?.user?.email;
+    if (status !== 'authenticated' || !email || hasChecked.current) return;
+
+    hasChecked.current = true;
+
+    async function getProfileInfo() {
+      const updated = await isProfileUpdated(email!);
+      if (!updated) {
+        toast.info('Complete your profile !!');
+      }
+    }
+
+    getProfileInfo();
+  }, [data?.user?.email, status]);
   return (
     
     <SidebarProvider

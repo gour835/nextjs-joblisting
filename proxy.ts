@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { auth } from './auth'
 
 // 1. Specify protected and public routes
-const protectedRoutes = ['/dashboard']
+const protectedRoutes = ['/dashboard', '/profile']
 const publicRoutes = ['/login', '/register', '/']
  
 export default async function proxy(req: NextRequest) {

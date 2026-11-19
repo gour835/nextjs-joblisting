@@ -7,8 +7,15 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { getJobs } from "../action/jobs"
 import SimplePagination from "@/components/simplePagination"
 
-export default async function page() {
-  const JobListingsResponse = await getJobs();
+interface PageProps {
+  searchParams: Promise<{
+    page?: string;
+  }>;
+}
+export default async function page({searchParams}: PageProps) {
+  const resolvedParams = await searchParams;
+  const page = resolvedParams.page ? Number(resolvedParams.page) : 1;
+  const JobListingsResponse = await getJobs(page);
   const jobs = JobListingsResponse.success ? JobListingsResponse.jobListings : [];
   const jobsTotal = JobListingsResponse.success ? JobListingsResponse.total : 1;
 
@@ -29,7 +36,7 @@ export default async function page() {
             <div className="@container/main flex flex-1 flex-col gap-2">
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 py-4 md:gap-6 md:py-6">
                 {jobs?.map((jobs, idx) => {
-                  return <CardImage key={idx} />
+                  return <CardImage title={jobs.title} key={idx} />
                 })}
 
               </div>

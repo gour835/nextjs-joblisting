@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export function CardImage() {
+export function CardImage({title}: {title: string}) {
   return (
     <Card className="relative bg-white mx-auto w-full max-w-sm pt-0 rounded-tl rounded-br shadow-2xl shadow-mauve-600">
       <div className="absolute inset-0 z-30 aspect-video  border-2 border-b-0" />
@@ -22,7 +22,7 @@ export function CardImage() {
         <CardAction>
           <Badge variant="secondary">Urgent Hiring</Badge>
         </CardAction>
-        <CardTitle>Jobs Title</CardTitle>
+        <CardTitle>{title}</CardTitle>
         <CardDescription>
           A practical talk on component APIs, accessibility, and shipping
           faster.

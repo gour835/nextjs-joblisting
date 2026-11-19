@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'0e09726e4d56908ee74c066382b8ea2ffa9f356574c0a8c21117fa88d89f79e8'>;
+  StorageHashBase<'ba34ab579bb410059f581f2f07dd600dff979d3aa09329e0f011a6bf40e5b8b4'>;
 export type ExecutionHash = ExecutionHashBase<string>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
@@ -274,7 +274,20 @@ type DefaultLiteralValue<CodecId extends string, Encoded> = CodecId extends keyo
   : Encoded;
 type ParameterizedOutputTypeFunctions = PgParameterizedOutputTypes;
 
-type FieldTypeOverrides = {};
+type FieldTypeOverrides = {
+  readonly public: {
+    readonly models: {
+      readonly JobListings: {
+        readonly type: {
+          readonly output:
+            'INTERNSHIP' | 'FULL-TIME' | 'PART-TIME' | 'WORK-FROM-HOME' | 'REMOTE' | 'HYBRID';
+          readonly input:
+            'INTERNSHIP' | 'FULL-TIME' | 'PART-TIME' | 'WORK-FROM-HOME' | 'REMOTE' | 'HYBRID';
+        };
+      };
+    };
+  };
+};
 export type FieldOutputTypes = FieldTypesFromDomain<
   ContractBase['domain']['namespaces'],
   CodecTypes,
@@ -291,7 +304,18 @@ export type FieldInputTypes = FieldTypesFromDomain<
   'input',
   ContractBase['storage']['namespaces']
 >;
-type ColumnTypeOverrides = {};
+type ColumnTypeOverrides = {
+  readonly public: {
+    readonly JobListings: {
+      readonly type: {
+        readonly output:
+          'INTERNSHIP' | 'FULL-TIME' | 'PART-TIME' | 'WORK-FROM-HOME' | 'REMOTE' | 'HYBRID';
+        readonly input:
+          'INTERNSHIP' | 'FULL-TIME' | 'PART-TIME' | 'WORK-FROM-HOME' | 'REMOTE' | 'HYBRID';
+      };
+    };
+  };
+};
 export type StorageColumnTypes = ColumnTypesFromStorage<
   ContractBase['storage'],
   CodecTypes,
@@ -308,6 +332,17 @@ export type StorageColumnInputTypes = ColumnTypesFromStorage<
 >;
 
 export namespace Models {
+  export type public_CandidateDetails = {
+    description: FieldOutputTypes['public']['CandidateDetails']['description'];
+    experianceDetails: FieldOutputTypes['public']['CandidateDetails']['experianceDetails'];
+    experianceInYears: FieldOutputTypes['public']['CandidateDetails']['experianceInYears'];
+    id: FieldOutputTypes['public']['CandidateDetails']['id'];
+    resume: FieldOutputTypes['public']['CandidateDetails']['resume'];
+    skills: FieldOutputTypes['public']['CandidateDetails']['skills'];
+    userId: FieldOutputTypes['public']['CandidateDetails']['userId'];
+    user: public_User;
+    readonly [RelationKeys]?: 'user';
+  };
   export type public_CategoriesOnJobListings = {
     categoryId: FieldOutputTypes['public']['CategoriesOnJobListings']['categoryId'];
     jobListingsId: FieldOutputTypes['public']['CategoriesOnJobListings']['jobListingsId'];
@@ -325,9 +360,13 @@ export namespace Models {
   };
   export type public_JobListings = {
     createdAt: FieldOutputTypes['public']['JobListings']['createdAt'];
+    currency: FieldOutputTypes['public']['JobListings']['currency'];
     description: FieldOutputTypes['public']['JobListings']['description'];
     id: FieldOutputTypes['public']['JobListings']['id'];
     jobId: FieldOutputTypes['public']['JobListings']['jobId'];
+    location: FieldOutputTypes['public']['JobListings']['location'];
+    payment: FieldOutputTypes['public']['JobListings']['payment'];
+    type: FieldOutputTypes['public']['JobListings']['type'];
     updatedAt: FieldOutputTypes['public']['JobListings']['updatedAt'];
     categories: public_CategoriesOnJobListings[];
     job: public_Jobs;
@@ -341,6 +380,15 @@ export namespace Models {
     updatedAt: FieldOutputTypes['public']['Jobs']['updatedAt'];
     jobListings: public_JobListings[];
     readonly [RelationKeys]?: 'jobListings';
+  };
+  export type public_RecruiterDetails = {
+    candidatesHired: FieldOutputTypes['public']['RecruiterDetails']['candidatesHired'];
+    description: FieldOutputTypes['public']['RecruiterDetails']['description'];
+    id: FieldOutputTypes['public']['RecruiterDetails']['id'];
+    jobsListed: FieldOutputTypes['public']['RecruiterDetails']['jobsListed'];
+    location: FieldOutputTypes['public']['RecruiterDetails']['location'];
+    userId: FieldOutputTypes['public']['RecruiterDetails']['userId'];
+    readonly [RelationKeys]?: never;
   };
   export type public_Tags = {
     id: FieldOutputTypes['public']['Tags']['id'];
@@ -371,10 +419,12 @@ export namespace Models {
 
 export declare const models: {
   public: {
+    CandidateDetails: Models.public_CandidateDetails;
     CategoriesOnJobListings: Models.public_CategoriesOnJobListings;
     Category: Models.public_Category;
     JobListings: Models.public_JobListings;
     Jobs: Models.public_Jobs;
+    RecruiterDetails: Models.public_RecruiterDetails;
     Tags: Models.public_Tags;
     TagsOnJobListings: Models.public_TagsOnJobListings;
     User: Models.public_User;
@@ -399,6 +449,83 @@ type ContractBase = Omit<
         readonly kind: 'postgres-schema';
         readonly entries: {
           readonly table: {
+            readonly CandidateDetails: {
+              columns: {
+                readonly description: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly experianceDetails: {
+                  readonly dataType: 'pg/json';
+                  readonly codecId: 'pg/json@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly experianceInYears: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'gen_random_uuid()';
+                  };
+                  readonly many: false;
+                };
+                readonly resume: {
+                  readonly dataType: 'pg/json';
+                  readonly codecId: 'pg/json@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly skills: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: { readonly elementNullable: false };
+                };
+                readonly userId: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'candidatedetials_pkey';
+              };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'CandidateDetails_userId_idx_a489d58a';
+                  readonly prefix: 'CandidateDetails_userId_idx';
+                  readonly columns: readonly ['userId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'CandidateDetails';
+                    readonly columns: readonly ['userId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'user';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly CategoriesOnJobListings: {
               columns: {
                 readonly categoryId: {
@@ -509,6 +636,12 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 6 };
                   readonly many: false;
                 };
+                readonly currency: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
                 readonly description: {
                   readonly dataType: 'pg/text';
                   readonly codecId: 'pg/text@1';
@@ -529,6 +662,28 @@ type ContractBase = Omit<
                   readonly dataType: 'pg/uuid';
                   readonly codecId: 'pg/uuid@1';
                   readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly location: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly payment: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly type: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'FULL-TIME'>;
+                  };
                   readonly many: false;
                 };
                 readonly updated_at: {
@@ -604,6 +759,57 @@ type ContractBase = Omit<
               uniques: readonly [
                 { readonly columns: readonly ['title']; readonly name: 'jobs_title_key' },
               ];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly RecruiterDetails: {
+              columns: {
+                readonly candidatesHired: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly description: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+                readonly id: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'gen_random_uuid()';
+                  };
+                  readonly many: false;
+                };
+                readonly jobsListed: {
+                  readonly dataType: 'pg/int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                  readonly many: false;
+                };
+                readonly location: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly many: { readonly elementNullable: false };
+                };
+                readonly userId: {
+                  readonly dataType: 'pg/uuid';
+                  readonly codecId: 'pg/uuid@1';
+                  readonly nullable: false;
+                  readonly many: false;
+                };
+              };
+              primaryKey: {
+                readonly columns: readonly ['id'];
+                readonly name: 'recruiterdetiils_pkey';
+              };
+              uniques: readonly [];
               indexes: readonly [];
               foreignKeys: readonly [];
             };
@@ -764,6 +970,19 @@ type ContractBase = Omit<
               foreignKeys: readonly [];
             };
           };
+          readonly valueSet: {
+            readonly JobListingsType: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'INTERNSHIP',
+                'FULL-TIME',
+                'PART-TIME',
+                'WORK-FROM-HOME',
+                'REMOTE',
+                'HYBRID',
+              ];
+            };
+          };
         };
       };
     };
@@ -774,6 +993,10 @@ type ContractBase = Omit<
   readonly target: 'postgres';
   readonly targetFamily: 'sql';
   readonly roots: {
+    readonly CandidateDetails: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'CandidateDetails';
+    };
     readonly CategoriesOnJobListings: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'CategoriesOnJobListings';
@@ -784,6 +1007,10 @@ type ContractBase = Omit<
       readonly model: 'JobListings';
     };
     readonly Jobs: { readonly namespace: 'public' & NamespaceId; readonly model: 'Jobs' };
+    readonly RecruiterDetails: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'RecruiterDetails';
+    };
     readonly Tags: { readonly namespace: 'public' & NamespaceId; readonly model: 'Tags' };
     readonly TagsOnJobListings: {
       readonly namespace: 'public' & NamespaceId;
@@ -795,6 +1022,63 @@ type ContractBase = Omit<
     readonly namespaces: {
       readonly public: {
         readonly models: {
+          readonly CandidateDetails: {
+            readonly fields: {
+              readonly description: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly experianceDetails: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/json@1' };
+              };
+              readonly experianceInYears: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly resume: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/json@1' };
+              };
+              readonly skills: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+                readonly many: { readonly elementNullable: false };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+            };
+            readonly relations: {
+              readonly user: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'User' };
+                readonly cardinality: 'N:1';
+                readonly nullable: false;
+                readonly on: {
+                  readonly localFields: readonly ['userId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'CandidateDetails';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly description: { readonly column: 'description' };
+                readonly experianceDetails: { readonly column: 'experianceDetails' };
+                readonly experianceInYears: { readonly column: 'experianceInYears' };
+                readonly id: { readonly column: 'id' };
+                readonly resume: { readonly column: 'resume' };
+                readonly skills: { readonly column: 'skills' };
+                readonly userId: { readonly column: 'userId' };
+              };
+            };
+          };
           readonly CategoriesOnJobListings: {
             readonly fields: {
               readonly categoryId: {
@@ -902,6 +1186,10 @@ type ContractBase = Omit<
                   readonly typeParams: { readonly precision: 6 };
                 };
               };
+              readonly currency: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly description: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -913,6 +1201,18 @@ type ContractBase = Omit<
               readonly jobId: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly location: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly payment: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly type: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly updatedAt: {
                 readonly nullable: false;
@@ -961,9 +1261,13 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly createdAt: { readonly column: 'created_at' };
+                readonly currency: { readonly column: 'currency' };
                 readonly description: { readonly column: 'description' };
                 readonly id: { readonly column: 'id' };
                 readonly jobId: { readonly column: 'job_id' };
+                readonly location: { readonly column: 'location' };
+                readonly payment: { readonly column: 'payment' };
+                readonly type: { readonly column: 'type' };
                 readonly updatedAt: { readonly column: 'updated_at' };
               };
             };
@@ -1016,6 +1320,48 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly title: { readonly column: 'title' };
                 readonly updatedAt: { readonly column: 'updated_at' };
+              };
+            };
+          };
+          readonly RecruiterDetails: {
+            readonly fields: {
+              readonly candidatesHired: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly description: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+              readonly jobsListed: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly location: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+                readonly many: { readonly elementNullable: false };
+              };
+              readonly userId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/uuid@1' };
+              };
+            };
+            readonly relations: Record<string, never>;
+            readonly storage: {
+              readonly table: 'RecruiterDetails';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly candidatesHired: { readonly column: 'candidatesHired' };
+                readonly description: { readonly column: 'description' };
+                readonly id: { readonly column: 'id' };
+                readonly jobsListed: { readonly column: 'jobsListed' };
+                readonly location: { readonly column: 'location' };
+                readonly userId: { readonly column: 'userId' };
               };
             };
           };
@@ -1159,6 +1505,29 @@ type ContractBase = Omit<
               };
             };
           };
+        };
+        readonly enum: {
+          readonly JobListingsType: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'Internship'; readonly value: 'INTERNSHIP' },
+              { readonly name: 'FullTime'; readonly value: 'FULL-TIME' },
+              { readonly name: 'PartTime'; readonly value: 'PART-TIME' },
+              { readonly name: 'WorkFromHome'; readonly value: 'WORK-FROM-HOME' },
+              { readonly name: 'Remote'; readonly value: 'REMOTE' },
+              { readonly name: 'Hybrid'; readonly value: 'HYBRID' },
+            ];
+          };
+        };
+        readonly enumMemberTypes?: {
+          readonly JobListingsType: readonly [
+            { readonly name: 'Internship'; readonly value: 'INTERNSHIP' },
+            { readonly name: 'FullTime'; readonly value: 'FULL-TIME' },
+            { readonly name: 'PartTime'; readonly value: 'PART-TIME' },
+            { readonly name: 'WorkFromHome'; readonly value: 'WORK-FROM-HOME' },
+            { readonly name: 'Remote'; readonly value: 'REMOTE' },
+            { readonly name: 'Hybrid'; readonly value: 'HYBRID' },
+          ];
         };
       };
     };

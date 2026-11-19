@@ -17,6 +17,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 import { MoreHorizontalIcon, FolderIcon, ShareIcon, Trash2Icon } from "lucide-react"
+import { usePathname } from "next/navigation"
 
 export function NavDocuments({
   items,
@@ -28,13 +29,14 @@ export function NavDocuments({
   }[]
 }) {
   const { isMobile } = useSidebar()
+  const path = usePathname()
   return (
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Documents</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
-          <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton render={<a href={item.url} />}>
+          <SidebarMenuItem key={item.name} >
+            <SidebarMenuButton render={<a href={item.url} className={`${path == item.url && 'dark:bg-gray-600 bg-gray-400 hover:bg-gray-600'}`}/>}>
               {item.icon}
               <span>{item.name}</span>
             </SidebarMenuButton>

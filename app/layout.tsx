@@ -8,6 +8,7 @@ import { ThemeProvider } from "@/components/theme-providor";
 
 import Providers from "@/components/providers";
 import { Toaster } from "sonner";
+import { SonnerToaster } from "@/components/ui/sooner-toaster";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -43,7 +44,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               disableTransitionOnChange
             >
               {children}
-              <Toaster />
+              <SonnerToaster richColors/>
             </ThemeProvider>
           </TooltipProvider>
         </Providers>

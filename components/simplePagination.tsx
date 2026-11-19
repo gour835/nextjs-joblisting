@@ -63,7 +63,7 @@ export default function SimplePagination({ total = 1 }) {
         setActive(newPage);
 
         const params = new URLSearchParams(searchParams.toString());
-        if (newPage === 1) {
+        if (newPage <= 1) {
             params.delete('page'); // Clean up URL if it's page 1
         } else {
             params.set('page', `${newPage}`);

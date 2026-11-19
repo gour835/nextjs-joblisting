@@ -32,9 +32,11 @@ export default function ProfileHeader() {
 
 
       </div>
-        <div className="w-fit h-fit p-1 rounded-full bg-gray-600 absolute inset-e-4 top-4">
+        <button onClick={()=>{
+          console.log('first')
+        }} className="w-fit h-fit p-1 rounded-full bg-gray-600 absolute inset-e-4 top-4">
           <PencilIcon className="w-4 h-4" />
-        </div>
+        </button>
     </div>
   )
 }

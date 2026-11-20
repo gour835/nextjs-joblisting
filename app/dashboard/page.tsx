@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/site-header"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { useSession } from "next-auth/react"
 import { useEffect, useRef } from "react"
-import isProfileUpdated from "../action/profile"
+import {isProfileUpdated} from "../action/profile"
 import { toast } from "sonner"
 
 

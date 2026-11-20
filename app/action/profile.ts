@@ -2,7 +2,7 @@
 
 import { db } from "@/src/prisma/db";
 
-export default async function isProfileUpdated(user_email: string) {
+export async function isProfileUpdated(user_email: string) {
     try {
         const User = await db.orm.public.User.select('category', 'id').first(({ email: user_email }));
 
@@ -21,5 +21,32 @@ export default async function isProfileUpdated(user_email: string) {
     } catch (error) {
         console.log('error checking profile: ', error);
         return { success: false, error };
+    }
+}
+
+export async function getUserJoiningDate(user_email:string) {
+    try {
+        const user = await db.orm.public.User.select('createdAt').first({email: user_email});
+        if (!user){
+            return {success: false, error: 'no user with this email'};
+        }
+        return {success: true, createdAt : user.createdAt};
+        
+    } catch (error) {
+        console.log('error fethcing profile created at: ', error);
+        return {success: false, error};
+    }
+}
+
+export async function getUserInfo(user_email: string){
+    try {
+        const user = await db.orm.public.User.select('category','email', 'username', 'image').first({email: user_email});
+        if(!user){
+            return {success: false, error: 'User not found'};
+        }
+        return {success: true, user};
+    } catch (error) {
+        console.log('error geting user information for profile: ', error);
+        return {success: false, error};
     }
 }

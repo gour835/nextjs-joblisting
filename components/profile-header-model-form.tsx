@@ -23,9 +23,10 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { useSession } from "next-auth/react"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
+import { ImageUp } from "lucide-react"
 
 const months = [
     { label: "MM", value: null },
@@ -60,7 +61,7 @@ export function ProfileHeaderModelForm() {
     const [username, setUsername] = useState<string | null>();
     const [email, setEmail] = useState<string | null>();
     const [image, setImage] = useState<string | null>();
-    const fallbackBanner = `https://api.dicebear.com/10.x/shapes/svg?seed=${encodeURIComponent(data?.user?.email || '')}`;
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     useEffect(() => {
         if (status === "loading") return;
@@ -94,7 +95,7 @@ export function ProfileHeaderModelForm() {
     }, [data?.user?.email, status])
     return (
         <div className="w-full mx-auto max-w-md">
-            
+
             <form>
                 <FieldGroup>
                     <FieldSet>
@@ -160,18 +161,28 @@ export function ProfileHeaderModelForm() {
                         </FieldGroup>
                     </FieldSet>
                     <FieldSeparator />
-                    <FieldSet>
-                        <FieldLegend>Image</FieldLegend>
-                        <Input id="picture" type="file" />
-                        <FieldDescription>Select a picture to upload.</FieldDescription>
+                    <FieldSet className="">
+
+                        <Input
+                            ref={fileInputRef}
+                            id="picture"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                        />
+                        <button
+                            className="absolute top-56 left-14 rounded-full w-fit h-fit p-1 bg-gray-200/70 backdrop-blur-md hover:bg-gray-400/80 transition-colors"
+                            type="button"
+                            onClick={() => {
+                                fileInputRef.current?.click();
+                            }}
+                        >
+                            <ImageUp className="w-5" />
+                        </button>
+
                     </FieldSet>
 
-                    <Field orientation="horizontal">
-                        <Button type="submit">Submit</Button>
-                        <Button variant="outline" type="button">
-                            Cancel
-                        </Button>
-                    </Field>
+
                 </FieldGroup>
             </form>
         </div>

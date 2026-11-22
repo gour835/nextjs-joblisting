@@ -13,55 +13,33 @@ import {
     FieldTitle,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
-import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
 import { useSession } from "next-auth/react"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
 import { ImageUp } from "lucide-react"
 
-const months = [
-    { label: "MM", value: null },
-    { label: "01", value: "01" },
-    { label: "02", value: "02" },
-    { label: "03", value: "03" },
-    { label: "04", value: "04" },
-    { label: "05", value: "05" },
-    { label: "06", value: "06" },
-    { label: "07", value: "07" },
-    { label: "08", value: "08" },
-    { label: "09", value: "09" },
-    { label: "10", value: "10" },
-    { label: "11", value: "11" },
-    { label: "12", value: "12" },
-]
-
-const years = [
-    { label: "YYYY", value: null },
-    { label: "2024", value: "2024" },
-    { label: "2025", value: "2025" },
-    { label: "2026", value: "2026" },
-    { label: "2027", value: "2027" },
-    { label: "2028", value: "2028" },
-    { label: "2029", value: "2029" },
-]
-
-export function ProfileHeaderModelForm() {
+export function ProfileHeaderModelForm({setImageUrl}:{setImageUrl: (newUrl: string) => void}) {
 
     const { data, status } = useSession()
     const [category, setCategory] = useState<string | null>();
     const [username, setUsername] = useState<string | null>();
     const [email, setEmail] = useState<string | null>();
     const [image, setImage] = useState<string | null>();
-    const fileInputRef = useRef<HTMLInputElement>(null)
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        console.log("Selected file:", file.name);
+        console.log(file);
+
+        const objectUrl = URL.createObjectURL(file);
+        setPreviewUrl(objectUrl);
+        setImageUrl(objectUrl);
+    };
 
     useEffect(() => {
         if (status === "loading") return;
@@ -169,6 +147,7 @@ export function ProfileHeaderModelForm() {
                             type="file"
                             accept="image/*"
                             className="hidden"
+                            onChange={handleFileChange}
                         />
                         <button
                             className="absolute top-56 left-14 rounded-full w-fit h-fit p-1 bg-gray-200/70 backdrop-blur-md hover:bg-gray-400/80 transition-colors"

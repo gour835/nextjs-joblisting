@@ -12,7 +12,8 @@ export default function ProfileHeader() {
   const [joindedAt, setJoinedAt] = useState<string>();
   const { data, status } = useSession();
 
-
+  const [imageUrl, setImageUrl] = useState(data?.user.image ||
+    `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(data?.user?.email || '')}`);
 
   useEffect(() => {
     if (status === "loading") return;
@@ -67,7 +68,7 @@ export default function ProfileHeader() {
       {/* profile pic and info div */}
       <div className="flex flex-col justify-center items-center absolute top-[30%] lg:top-[50%] left-[50%] -translate-x-1/2 ">
         <img className="size-28 rounded-full border-4 border-gray-100 dark:border-gray-800 bg-gray-100 dark:bg-gray-800"
-          src={avatarUrl} alt="" />
+          src={imageUrl} alt="" />
 
         <div className="font-bold text-2xl capitalize overflow-auto ">
           {data?.user.username}
@@ -92,7 +93,7 @@ export default function ProfileHeader() {
 
       </div>
 
-      <EditProfileModel>
+      <EditProfileModel setImageUrl={setImageUrl} imageUrl={imageUrl}>
         <button className="w-fit h-fit p-1 rounded-full bg-gray-500 text-white absolute inset-e-4 top-4 hover:bg-gray-400">
           <PencilIcon className="w-4 h-4" />
         </button>

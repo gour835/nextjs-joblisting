@@ -10,14 +10,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import React, { useState } from "react"
+import React from "react"
 import { ProfileHeaderModelForm } from "./profile-header-model-form"
 import { useSession } from "next-auth/react"
 
-export function EditProfileModel({ children }: { children: React.ReactElement }) {
+export function EditProfileModel({ imageUrl, setImageUrl, children }: { children: React.ReactElement, imageUrl: string, setImageUrl: (newUrl: string) => void }) {
   const { data } = useSession();
-  const [imageUrl, setImageUrl] = useState(data?.user.image ||
-    `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(data?.user?.email || '')}`);
+
 
   const fallbackBanner = `https://api.dicebear.com/10.x/shapes/svg?seed=${encodeURIComponent(data?.user?.email || '')}`;
 
@@ -35,7 +34,7 @@ export function EditProfileModel({ children }: { children: React.ReactElement })
             src={imageUrl} alt="user profile-pic" />
         </div>
         <div className="no-scrollbar max-h-[50vh] overflow-y-auto px-4">
-          <ProfileHeaderModelForm setImageUrl={setImageUrl}/>
+          <ProfileHeaderModelForm setImageUrl={setImageUrl} />
         </div>
         <DialogFooter className="border-t-2 p-3" >
           <DialogClose render={<button className={'bg-purple-700 py-1 px-2 rounded-3xl font-semibold border border-green-400 hover:bg-purple-800'} />}>

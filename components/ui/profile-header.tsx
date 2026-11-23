@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @next/next/no-img-element */
 'use client';
 
@@ -12,9 +13,16 @@ export default function ProfileHeader() {
   const [joindedAt, setJoinedAt] = useState<string>();
   const { data, status } = useSession();
 
-  const [imageUrl, setImageUrl] = useState(data?.user.image ||
-    `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(data?.user?.email || '')}`);
+  const [imageUrl, setImageUrl] = useState('');
 
+  useEffect(() => {
+    if (data?.user?.image) {
+      setImageUrl(data?.user?.image);
+    }
+    else {
+      setImageUrl(`https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(data?.user?.email || '')}`)
+    }
+  }, [data?.user?.email])
   useEffect(() => {
     if (status === "loading") return;
 
@@ -52,9 +60,6 @@ export default function ProfileHeader() {
   const category = data?.user?.category != null
     ? `${String(data.user.category).charAt(0).toUpperCase()}${String(data.user.category).slice(1)}`
     : "";
-  const avatarUrl =
-    data?.user.image ||
-    `https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(data?.user?.email || '')}`;
 
   const fallbackBanner = `https://api.dicebear.com/10.x/shapes/svg?seed=${encodeURIComponent(data?.user?.email || '')}`;
   return (
@@ -67,8 +72,13 @@ export default function ProfileHeader() {
       </div>
       {/* profile pic and info div */}
       <div className="flex flex-col justify-center items-center absolute top-[30%] lg:top-[50%] left-[50%] -translate-x-1/2 ">
-        <img className="size-28 rounded-full border-4 border-gray-100 dark:border-gray-800 bg-gray-100 dark:bg-gray-800"
-          src={imageUrl} alt="" />
+        {imageUrl &&
+          <>
+            <img className="size-28 rounded-full border-4 border-gray-100 dark:border-gray-800 bg-gray-100 dark:bg-gray-800"
+              src={imageUrl} alt="" referrerPolicy="no-referrer" />
+
+          </>
+        }
 
         <div className="font-bold text-2xl capitalize overflow-auto ">
           {data?.user.username}

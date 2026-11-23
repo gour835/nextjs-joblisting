@@ -17,9 +17,9 @@ import { useSession } from "next-auth/react"
 import { useEffect, useRef, useState } from "react"
 import { toast } from "sonner"
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group"
-import { ImageUp } from "lucide-react"
+import { Eye, EyeClosed, ImageUp } from "lucide-react"
 
-export function ProfileHeaderModelForm({setImageUrl}:{setImageUrl: (newUrl: string) => void}) {
+export function ProfileHeaderModelForm({ setImageUrl }: { setImageUrl: (newUrl: string) => void }) {
 
     const { data, status } = useSession()
     const [category, setCategory] = useState<string | null>();
@@ -28,6 +28,7 @@ export function ProfileHeaderModelForm({setImageUrl}:{setImageUrl: (newUrl: stri
     const [image, setImage] = useState<string | null>();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+    const [visible, setvisible] = useState<boolean>(false);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
@@ -100,6 +101,29 @@ export function ProfileHeaderModelForm({setImageUrl}:{setImageUrl: (newUrl: stri
                                     required
                                 />
                             </Field>
+                            <Field className="relative">
+                                <FieldLabel htmlFor="password">
+                                    Password:
+                                </FieldLabel>
+                                <Input
+                                    id="password"
+                                    placeholder="EvilRabit@123"
+                                    type={`${visible ? 'text' : 'password'}`}
+                                    required
+                                />
+                                <Eye
+                                    className={`!w-8 rounded-full hover:text-black absolute top-9 right-4 hover:bg-gray-300 ${!visible && 'hidden'}`}
+                                    onClick={()=>{
+                                        setvisible(false)
+                                    }}
+                                />
+                                <EyeClosed
+                                    className={`!w-8 rounded-full hover:text-black absolute top-9 right-4 hover:bg-gray-300 ${visible && 'hidden'}`}
+                                    onClick={()=>{
+                                        setvisible(true)
+                                    }}
+                                />
+                            </Field>
                             <FieldSet className="w-full">
                                 <FieldLegend variant="label">Which Describes you the best:</FieldLegend>
                                 <RadioGroup
@@ -132,7 +156,7 @@ export function ProfileHeaderModelForm({setImageUrl}:{setImageUrl: (newUrl: stri
 
                                 </RadioGroup>
                                 <FieldDescription>
-                                    To Change this please contact the support or delete and register again
+                                    To Change this please contact the support or delete your account and register again
                                 </FieldDescription>
                             </FieldSet>
 

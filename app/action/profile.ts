@@ -50,3 +50,20 @@ export async function getUserInfo(user_email: string){
         return {success: false, error};
     }
 }
+
+export async function getUserDetails(user_email: string){
+    try {
+        const user = await db.orm.public.User.first({email: user_email});
+
+        if(user?.category == 'developer'){
+            const CandidateDetails= await db.orm.public.CandidateDetails.first({id: user?.id});
+            return {success: true, type: 'developer', details: CandidateDetails};
+        }else{
+            const RecruiterDetails = await db.orm.public.RecruiterDetails.first({id: user?.id});
+            return {success: true, type: 'recruiter', details: RecruiterDetails};
+        }
+    } catch (error) {
+        console.log('error getting user details for profile: ', error);
+        return {success: false, error};
+    }
+}

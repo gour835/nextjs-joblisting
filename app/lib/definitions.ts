@@ -93,36 +93,37 @@ export const RegisterUpdateSchema = z.object({
     companyWebsite: z
         .string()
         .optional()
-}).superRefine((data, ctx) => {
-    if (data.category == 'recruiter') {
-        if (!data.companyWebsite || data.companyWebsite?.trim() == '') {
-            ctx.addIssue({
-                code: z.ZodIssueCode.custom,
-                message: 'Company website is required for Recruiters',
-                path: ['companyWebsite']
-            });
-        } else {
-            try {
-                if (data.companyWebsite) {
-                    new URL(data.companyWebsite);
-                } else {
+})
+    .superRefine((data, ctx) => {
+        if (data.category == 'recruiter') {
+            if (!data.companyWebsite || data.companyWebsite?.trim() == '') {
+                ctx.addIssue({
+                    code: z.ZodIssueCode.custom,
+                    message: 'Company website is required for Recruiters',
+                    path: ['companyWebsite']
+                });
+            } else {
+                try {
+                    if (data.companyWebsite) {
+                        new URL(data.companyWebsite);
+                    } else {
+                        ctx.addIssue({
+                            code: z.ZodIssueCode.custom,
+                            message: 'Please enter a valid URL',
+                            path: ['companyWebsite'],
+                        });
+                    }
+
+                } catch {
                     ctx.addIssue({
                         code: z.ZodIssueCode.custom,
                         message: 'Please enter a valid URL',
                         path: ['companyWebsite'],
                     });
                 }
-
-            } catch {
-                ctx.addIssue({
-                    code: z.ZodIssueCode.custom,
-                    message: 'Please enter a valid URL',
-                    path: ['companyWebsite'],
-                });
             }
         }
-    }
-});
+    });
 
 export const loginFormSchema = z.object({
     email: z
@@ -134,6 +135,47 @@ export const loginFormSchema = z.object({
         .trim(),
 
 })
+
+const passwordRules = z
+    .string()
+    .min(8, { error: "Be at least 8 characters long" })
+    .regex(/[a-zA-Z]/, { error: "Contain at least one letter." })
+    .regex(/[0-9]/, { error: "Contain at least one number." })
+    .regex(/[^a-zA-Z0-9]/, {
+        error: "Contain at least one special character.",
+    });
+
+export const profileUpdateSchema = z.object({
+    username: z
+        .string()
+        .min(2, { error: 'Name must be at least 2 characters long.' })
+        .refine(async (username) => {
+            const isRegisteredUsername = await CheckUsernameRegistered(username);
+            return !isRegisteredUsername
+        }, {
+            message: 'This Username is taken, please choose another one'
+        })
+        .trim(),
+    email: z
+        .email({ error: 'Please Enter a Valid Email' })
+        .refine(async (email) => {
+            const isRegisteredEmail = await CheckEmailRegistered(email);
+            return !isRegisteredEmail
+        }, {
+            message: 'This Email is Already in Use'
+        })
+        .trim(),
+    password: z
+        .union([z.literal(""), z.undefined(), passwordRules])
+        .transform((val) => (typeof val === "string" ? val.trim() : undefined)),
+    image: z
+        .string()
+        .trim()
+        .optional()
+        .or(z.literal(""))
+});
+
+
 
 export type FormState =
     | {

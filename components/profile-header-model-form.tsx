@@ -26,6 +26,7 @@ export function ProfileHeaderModelForm({ setImageUrl }: { setImageUrl: (newUrl: 
     const [username, setUsername] = useState<string | null>();
     const [email, setEmail] = useState<string | null>();
     const [image, setImage] = useState<string | null>();
+    const [password, setPassword] = useState<string | null>();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [visible, setvisible] = useState<boolean>(false);
@@ -84,9 +85,10 @@ export function ProfileHeaderModelForm({ setImageUrl }: { setImageUrl: (newUrl: 
                                     Email:
                                 </FieldLabel>
                                 <Input
+                                    key={email ?? ''}
                                     id="email"
                                     placeholder="EvilRabbit@gmail.com"
-                                    value={email ?? ''}
+                                    defaultValue={email ?? ''}
                                     required
                                 />
                             </Field>
@@ -95,9 +97,10 @@ export function ProfileHeaderModelForm({ setImageUrl }: { setImageUrl: (newUrl: 
                                     Username:
                                 </FieldLabel>
                                 <Input
+                                    key={username ?? ''}
                                     id="username"
                                     placeholder="EvilRabit@123"
-                                    value={username ?? ''}
+                                    defaultValue={username ?? ''}
                                     required
                                 />
                             </Field>
@@ -109,6 +112,7 @@ export function ProfileHeaderModelForm({ setImageUrl }: { setImageUrl: (newUrl: 
                                     id="password"
                                     placeholder="EvilRabit@123"
                                     type={`${visible ? 'text' : 'password'}`}
+                                    
                                     required
                                 />
                                 <Eye

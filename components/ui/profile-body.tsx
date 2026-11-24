@@ -2,10 +2,14 @@
 
 import { getUserDetails } from "@/app/action/profile"
 import { useSession } from "next-auth/react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import CandidateDetails from "../candidate-details"
+import RecruiterDetails from "../recruiter-details"
 
 export default function ProfileBody() {
   const { data, status } = useSession()
+  const [type, setType] = useState<string>();
+  const [details, setDetails] = useState<object | null>();
 
   useEffect(() => {
     if (status === "loading") return;
@@ -20,8 +24,8 @@ export default function ProfileBody() {
       if (cancelled) return;
 
       if (detailsResponse.success) {
-        console.log(detailsResponse.type);
-        console.log(detailsResponse.details);
+        setType(detailsResponse.type);
+        setDetails(detailsResponse.details);
       }
     }
     fetchUserDetails()
@@ -31,10 +35,10 @@ export default function ProfileBody() {
   }, [data?.user?.email, status])
   return (
     <div className="w-[90%] flex flex-col lg:flex-row gap-3 m-3">
-      <div className="w-[50%] relative rounded-3xl bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border-2 shadow-xl dark:shadow-2xl shadow-gray-300 dark:shadow-gray-800">
-        details
+      <div className="w-full lg:w-[50%] relative rounded-2xl bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border-2 shadow-xl dark:shadow-2xl shadow-gray-300 dark:shadow-gray-800">
+        {type == 'developer'? <CandidateDetails/> : <RecruiterDetails/>}
       </div>
-      <div className="w-[50%] relative rounded-3xl bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border-2 shadow-xl dark:shadow-2xl shadow-gray-300 dark:shadow-gray-800">
+      <div className="w-full lg:w-[50%] relative rounded-3xl bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border-2 shadow-xl dark:shadow-2xl shadow-gray-300 dark:shadow-gray-800">
         resume | recruiter stats
       </div>
     </div>

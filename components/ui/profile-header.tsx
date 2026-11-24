@@ -16,13 +16,14 @@ export default function ProfileHeader() {
   const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
-    if (data?.user?.image) {
-      setImageUrl(data?.user?.image);
+    const img = data?.user?.image;
+    if (img) {
+      setImageUrl(img);
     }
     else {
-      setImageUrl(`https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(data?.user?.email || '')}`)
+      setImageUrl(`https://api.dicebear.com/9.x/bottts/svg?seed=${encodeURIComponent(img || '')}`)
     }
-  }, [data?.user?.email])
+  }, [data?.user?.image])
   useEffect(() => {
     if (status === "loading") return;
 

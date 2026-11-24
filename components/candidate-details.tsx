@@ -33,6 +33,14 @@ export default function CandidateDetails() {
                 </div>
             </span>
         </div>
+        <div className="w-full flex flex-row ">
+            <h4 className="text-xl font-semibold"> 
+                Description:
+            </h4>
+            <span className="mx-2 ">
+                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Iusto ex culpa officia esse eius veritatis labore rerum ratione voluptatem. Reiciendis nostrum nam porro eveniet soluta itaque illo nulla excepturi totam?
+            </span>
+        </div>
         
     </div>
   )

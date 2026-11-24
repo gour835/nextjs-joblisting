@@ -3,6 +3,30 @@
 // then run 
 // `prisma contract emit`  
 // `prisma db update` (for prisma 8)  
+
+// experiance details:
+// {
+// companyName:
+// skills:
+// months:
+// compensations: optional
+// }
+
+// Resume details:
+// {
+// name:
+// email:
+// mobile:
+// number: 
+// address:
+// objectives:
+// education:
+// workExperiance:
+// ExperianceDetails: will try to fetch from experiance details column if it filled 
+// skills: this should be filled individually as experiance details will store job specific skills
+// resumeLink: pdf, word files only. prompt user to store the drive link if not upload the file. (will setup upload logic later )
+// }
+
 enum JobListingsType {
   @@type("pg/text@1")
   Internship = "INTERNSHIP"

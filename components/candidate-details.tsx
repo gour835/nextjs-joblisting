@@ -1,7 +1,7 @@
 
 export default function CandidateDetails() {
     return (
-        <div className="w-full h-full flex flex-col justify-center items-center p-3 gap-3">
+        <div className="w-full h-fit flex flex-col justify- items-center p-3 gap-3">
             <h2 className="text-2xl font-bold">
                 Candidate Details
             </h2>

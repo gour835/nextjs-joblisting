@@ -5,6 +5,8 @@ import { useSession } from "next-auth/react"
 import { useEffect, useState } from "react"
 import CandidateDetails from "../candidate-details"
 import RecruiterDetails from "../recruiter-details"
+import Resume from "../resume"
+import RecruiterStats from "../recruiter-stats"
 
 export default function ProfileBody() {
   const { data, status } = useSession()
@@ -39,7 +41,7 @@ export default function ProfileBody() {
         {type == 'developer'? <CandidateDetails/> : <RecruiterDetails/>}
       </div>
       <div className="w-full lg:w-[50%] relative rounded-3xl bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border-2 shadow-xl dark:shadow-2xl shadow-gray-300 dark:shadow-gray-800">
-        resume | recruiter stats
+        {type == 'developer'? <Resume/> : <RecruiterStats/>}
       </div>
     </div>
   )

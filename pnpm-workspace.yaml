@@ -1,6 +1,8 @@
 allowBuilds:
   bcrypt: false
   unrs-resolver: false
+minimumReleaseAgeExclude:
+  - '@react-pdf/hyphenate@0.1.1'
 permissions:
   '@prisma/orm-postgres':
     skills: false

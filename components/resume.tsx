@@ -1,4 +1,6 @@
 import { PencilIcon } from "lucide-react";
+import PdfTopPreview from "./reactpdf";
+
 
 export default function Resume() {
     return (
@@ -161,6 +163,19 @@ export default function Resume() {
                         </div>
 
                     </div>
+                </span>
+            </div>
+
+            <div className="w-full flex flex-col ">
+                <h4 className="text-xl font-semibold">
+                    Uploaded Resume:
+                </h4>
+                <span className="mx-2">
+                    <div className="border-4 h-40 rounded-2xl p-2 my-2">
+                       
+                        <PdfTopPreview fileUrl="/pdfs/GouranshResume.pdf"/>
+                    </div>
+                    
                 </span>
             </div>
 

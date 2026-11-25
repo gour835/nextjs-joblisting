@@ -1,3 +1,4 @@
+import { PencilIcon } from "lucide-react";
 
 export default function Resume() {
     return (
@@ -162,6 +163,10 @@ export default function Resume() {
                     </div>
                 </span>
             </div>
+
+            <button className="w-fit h-fit p-1 rounded-full bg-gray-500 text-white absolute inset-e-4 top-4 hover:bg-gray-400">
+                <PencilIcon className="w-4 h-4" />
+            </button>
         </div>
     )
 }

@@ -36,11 +36,11 @@ export default function ProfileBody() {
     };
   }, [data?.user?.email, status])
   return (
-    <div className="w-[90%] flex flex-col lg:flex-row gap-3 m-3">
-      <div className="w-full lg:w-[50%] relative rounded-2xl bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border-2 shadow-xl dark:shadow-2xl shadow-gray-300 dark:shadow-gray-800">
+    <div className="w-[90%] flex flex-col gap-3 m-3">
+      <div className="w-full relative rounded-2xl bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border-2 shadow-xl dark:shadow-2xl shadow-gray-300 dark:shadow-gray-800">
         {type == 'developer'? <CandidateDetails/> : <RecruiterDetails/>}
       </div>
-      <div className="w-full lg:w-[50%] relative rounded-3xl bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border-2 shadow-xl dark:shadow-2xl shadow-gray-300 dark:shadow-gray-800">
+      <div className="w-full relative rounded-3xl bg-gray-100 dark:bg-gray-800 border-gray-300 dark:border-gray-600 border-2 shadow-xl dark:shadow-2xl shadow-gray-300 dark:shadow-gray-800">
         {type == 'developer'? <Resume/> : <RecruiterStats/>}
       </div>
     </div>

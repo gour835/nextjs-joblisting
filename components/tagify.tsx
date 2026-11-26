@@ -12,21 +12,117 @@ import Tagify, {
 import "@yaireo/tagify/dist/tagify.css";
 import "../app/tagify-custom.css";
 
-function createRandomEmails(count = 100): string[] {
-  return Array.from({ length: count }, () => {
-    const length = Math.floor(Math.random() * 10 + 3);
-    const localPart = Array.from({ length }, () =>
-      String.fromCharCode(Math.floor(Math.random() * (123 - 97) + 97))
-    ).join("");
-    return `${localPart}@gmail.com`;
-  });
-}
 
+
+const SOFTWARE_DEV_SKILLS = [
+  // Languages
+  'JavaScript',
+  'TypeScript',
+  'Python',
+  'Java',
+  'C',
+  'C++',
+  'C#',
+  'Go',
+  'Rust',
+  'PHP',
+  'Ruby',
+  'Kotlin',
+  'Swift',
+  'Dart',
+  'Scala',
+  'SQL',
+  'Bash',
+  'PowerShell',
+
+  // Frontend & UI
+  'HTML5',
+  'CSS3',
+  'React',
+  'Next.js',
+  'Vue.js',
+  'Nuxt',
+  'Angular',
+  'Svelte',
+  'Tailwind CSS',
+  'Shadcn UI',
+  'Bootstrap',
+  'Redux Toolkit',
+  'Zustand',
+  'TanStack Query',
+  'jQuery',
+  'Vite',
+  'Webpack',
+
+  // Backend & APIs
+  'Node.js',
+  'Express.js',
+  'NestJS',
+  'Fastify',
+  'Laravel',
+  'Symfony',
+  'Django',
+  'FastAPI',
+  'Flask',
+  'Spring Boot',
+  'ASP.NET Core',
+  'REST APIs',
+  'GraphQL',
+  'tRPC',
+  'WebSockets',
+  'Socket.IO',
+  'Server-Sent Events',
+
+  // Databases, Caching & Queues
+  'PostgreSQL',
+  'MySQL',
+  'SQLite',
+  'MongoDB',
+  'ClickHouse',
+  'Redis',
+  'BullMQ',
+  'Prisma',
+  'Mongoose',
+  'Sequelize',
+  'TypeORM',
+  'Drizzle ORM',
+  'Elasticsearch',
+
+  // DevOps, Cloud & Servers
+  'Git',
+  'GitHub',
+  'GitLab CI/CD',
+  'Docker',
+  'Kubernetes',
+  'Linux',
+  'Ubuntu',
+  'Nginx',
+  'Apache2',
+  'PHP-FPM',
+  'AWS',
+  'Google Cloud',
+  'Microsoft Azure',
+  'Vercel',
+  'Cloudflare',
+  'Terraform',
+
+  // Testing, Architecture & Practices
+  'Jest',
+  'Vitest',
+  'Playwright',
+  'Cypress',
+  'System Design',
+  'Data Structures and Algorithms',
+  'Microservices',
+  'CI/CD',
+  'OAuth / JWT',
+  'Webhooks',
+];
 export default function CustomLookEmailInput() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const tagifyRef = useRef<Tagify | null>(null);
-  const [emails, setEmails] = useState<string[]>([]);
-  const [whitelist, setWhitelist] = useState<string[]>([]);
+  const [skills, setSkills] = useState<string[]>([]);
+  const [whitelist, setWhitelist] = useState<string[]>(SOFTWARE_DEV_SKILLS);
 
   const settings = useMemo<TagifySettings<TagData>>(
     () => ({
@@ -46,9 +142,9 @@ export default function CustomLookEmailInput() {
             const parsed: Array<{ value: string }> = rawValue
               ? JSON.parse(rawValue)
               : [];
-            setEmails(parsed.map((item) => item.value));
+            setSkills(parsed.map((item) => item.value));
           } catch {
-            setEmails([]);
+            setSkills([]);
           }
         },
       },
@@ -59,10 +155,6 @@ export default function CustomLookEmailInput() {
     }),
     []
   );
-
-  useEffect(() => {
-    setWhitelist(createRandomEmails(100));
-  }, []);
 
   useEffect(() => {
     const inputEl = inputRef.current;
@@ -94,7 +186,7 @@ export default function CustomLookEmailInput() {
           +
         </button>
       </div>
-      <p>Selected emails: {emails.join(", ") || "None"}</p>
+      <p>Selected skills: {skills.join(", ") || "None"}</p>
     </div>
   );
 }

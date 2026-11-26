@@ -67,3 +67,12 @@ export async function getUserDetails(user_email: string){
         return {success: false, error};
     }
 }
+
+export async function getSkills(){
+    try {
+        
+    } catch (error) {
+        console.log('error geting skills: ', error);
+        return {success:false, error};
+    }
+}

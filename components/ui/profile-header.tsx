@@ -77,7 +77,6 @@ export default function ProfileHeader() {
           <>
             <img className="size-28 rounded-full border-4 border-gray-100 dark:border-gray-800 bg-gray-100 dark:bg-gray-800"
               src={imageUrl} alt="" referrerPolicy="no-referrer" />
-
           </>
         }
 

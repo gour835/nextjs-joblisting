@@ -199,6 +199,9 @@ importers:
       '@tanstack/react-table':
         specifier: ^9.2.4
         version: 9.2.4(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
+      '@yaireo/tagify':
+        specifier: ^4.39.0
+        version: 4.39.0(prop-types@15.8.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3
@@ -2183,6 +2186,14 @@ packages:
 
   '@vue/shared@3.5.46':
     resolution: {integrity: sha512-P1WePbdzHrcIciWtmY2Im9EFhdakd3rZxYqvalOa3SfoxtF35Q8Uhmj1tKn6bWP4utcOpN8ao6BoJUItq0Uf+g==}
+
+  '@yaireo/tagify@4.39.0':
+    resolution: {integrity: sha512-7T/4PyjzrHj8QO5s06V1wV27AK6H6KtzTkFMPzm1lMKHs/rXioIbNBxxswKg2IkAfYrATRKLok5ZEJ6g3m262w==}
+    engines: {node: '>=22', pnpm: '>=10'}
+    peerDependencies:
+      prop-types: '>15.5.7'
+      react: '*'
+      react-dom: '*'
 
   abbrev@3.0.1:
     resolution: {integrity: sha512-AO2ac6pjRB3SJmGJo+v5/aK6Omggp6fsLrs6wN9bd35ulu4cCwaAU9+7ZhXjeqHVkaHThLuzH0nZr0YpCDhygg==}
@@ -6966,6 +6977,12 @@ snapshots:
 
   '@vue/shared@3.5.46': {}
 
+  '@yaireo/tagify@4.39.0(prop-types@15.8.1)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)':
+    dependencies:
+      prop-types: 15.8.1
+      react: 19.2.8
+      react-dom: 19.2.8(react@19.2.8)
+
   abbrev@3.0.1: {}
 
   accepts@2.0.0:
@@ -7920,7 +7937,7 @@ snapshots:
 
   esrap@2.4.2(@typescript-eslint/types@8.67.0):
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.5
+      '@jridgewell/sourcemap-codec': 1.6.0
     optionalDependencies:
       '@typescript-eslint/types': 8.67.0
 

@@ -1,4 +1,5 @@
 import { PencilIcon } from "lucide-react";
+import { EditCandidateDetailsModel } from "./candidate-details-model";
 
 export default function CandidateDetails() {
     return (
@@ -150,9 +151,13 @@ export default function CandidateDetails() {
 
                 </span>
             </div>
+
+            <EditCandidateDetailsModel>
+
             <button className="w-fit h-fit p-1 rounded-full bg-gray-500 text-white absolute inset-e-4 top-4 hover:bg-gray-400">
                 <PencilIcon className="w-4 h-4" />
             </button>
+            </EditCandidateDetailsModel>
         </div>
     )
 }

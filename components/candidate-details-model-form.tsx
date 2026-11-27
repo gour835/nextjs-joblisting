@@ -31,7 +31,7 @@ export function CandidateDetailsModelForm() {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [visible, setvisible] = useState<boolean>(false);
 
-    
+
 
     useEffect(() => {
         if (status === "loading") return;
@@ -82,6 +82,13 @@ export function CandidateDetailsModelForm() {
                                     required
                                 />
                             </Field>
+
+                            <Field>
+                                <FieldLabel htmlFor="email">
+                                    Skills:
+                                </FieldLabel>
+                                <CustomLookEmailInput />
+                            </Field>
                             <Field>
                                 <FieldLabel htmlFor="username">
                                     Username:
@@ -94,72 +101,14 @@ export function CandidateDetailsModelForm() {
                                     required
                                 />
                             </Field>
-                            <Field className="relative">
-                                <FieldLabel htmlFor="password">
-                                    Password:
-                                </FieldLabel>
-                                <Input
-                                    id="password"
-                                    placeholder="EvilRabit@123"
-                                    type={`${visible ? 'text' : 'password'}`}
-                                    
-                                    required
-                                />
-                                <Eye
-                                    className={`!w-8 rounded-full hover:text-black absolute top-9 right-4 hover:bg-gray-300 ${!visible && 'hidden'}`}
-                                    onClick={()=>{
-                                        setvisible(false)
-                                    }}
-                                />
-                                <EyeClosed
-                                    className={`!w-8 rounded-full hover:text-black absolute top-9 right-4 hover:bg-gray-300 ${visible && 'hidden'}`}
-                                    onClick={()=>{
-                                        setvisible(true)
-                                    }}
-                                />
-                            </Field>
-                            <FieldSet className="w-full">
-                                <FieldLegend variant="label">Which Describes you the best:</FieldLegend>
-                                <RadioGroup
-                                    value={category ?? 'developer'}
-                                    name="category"
-                                    disabled
-                                    aria-disabled
-                                    className="w-full cursor-no-drop">
-                                    <FieldLabel htmlFor="developer" className="cursor-no-drop">
-                                        <Field orientation="horizontal">
-                                            <FieldContent>
-                                                <FieldTitle>Developer</FieldTitle>
-                                                <FieldDescription>
-                                                    For individuals who wants to be Hired.
-                                                </FieldDescription>
-                                            </FieldContent>
-                                            <RadioGroupItem value="developer" id="developer" />
-                                        </Field>
-                                    </FieldLabel>
-                                    <FieldLabel htmlFor="recruiter" className="cursor-no-drop">
-                                        <Field orientation="horizontal">
-                                            <FieldContent>
-                                                <FieldTitle>Recruiter</FieldTitle>
-                                                <FieldDescription>For individuals or firms who wants to Hire.</FieldDescription>
-                                            </FieldContent>
-                                            <RadioGroupItem value="recruiter" id="recruiter" />
-                                        </Field>
-
-                                    </FieldLabel>
-
-                                </RadioGroup>
-                                <FieldDescription>
-                                    To Change this please contact the support or delete your account and register again
-                                </FieldDescription>
-                            </FieldSet>
+                            
 
                         </FieldGroup>
 
-                        <CustomLookEmailInput/>
+                        
                     </FieldSet>
                     <FieldSeparator />
-                    
+
 
 
                 </FieldGroup>

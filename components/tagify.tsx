@@ -122,7 +122,6 @@ export default function CustomLookEmailInput() {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const tagifyRef = useRef<Tagify | null>(null);
   const [skills, setSkills] = useState<string[]>([]);
-  const [whitelist, setWhitelist] = useState<string[]>(SOFTWARE_DEV_SKILLS);
 
   const settings = useMemo<TagifySettings<TagData>>(
     () => ({
@@ -131,7 +130,7 @@ export default function CustomLookEmailInput() {
       },
       pattern:
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      whitelist: [],
+      whitelist: SOFTWARE_DEV_SKILLS,
       callbacks: {
         invalid: (e: BaseEvent<InvalidTagData>) => {
           console.log("invalid", e.detail);
@@ -169,10 +168,6 @@ export default function CustomLookEmailInput() {
     };
   }, [settings]);
 
-  useEffect(() => {
-    if (!tagifyRef.current) return;
-    tagifyRef.current.settings.whitelist = whitelist;
-  }, [whitelist]);
 
   const handleAddButtonClick = () => {
     tagifyRef.current?.addEmptyTag();

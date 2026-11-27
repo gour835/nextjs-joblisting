@@ -21,16 +21,16 @@ export default function CandidateDetails() {
                     skills:
                 </h4>
                 <span className="mx-2 grid grid-cols-3 lg:grid-cols-5 gap-3">
-                    <div className="w-fit text-white bg-gray-700 dark:text-black dark:bg-gray-400 rounded-3xl p-1">
+                    <div className="w-fit text-white bg-blue-700   rounded-3xl py-1 px-2">
                         javascript
                     </div>
-                    <div className="w-fit text-white bg-gray-700 dark:text-black dark:bg-gray-400 rounded-3xl p-1">
+                    <div className="w-fit  text-white bg-blue-700   rounded-3xl py-1 px-2">
                         nextjs
                     </div>
-                    <div className="w-fit text-white bg-gray-700 dark:text-black dark:bg-gray-400 rounded-3xl p-1">
+                    <div className="w-fit  text-white bg-blue-700   rounded-3xl py-1 px-2">
                         expressjs
                     </div>
-                    <div className="w-fit text-white bg-gray-700 dark:text-black dark:bg-gray-400 rounded-3xl p-1">
+                    <div className="w-fit  text-white bg-blue-700   rounded-3xl py-1 px-2">
                         mongodb
                     </div>
                 </span>
@@ -58,16 +58,16 @@ export default function CandidateDetails() {
                                 skills:
                             </span>
                             <span className="mx-2 grid grid-cols-3 lg:grid-cols-5 gap-3">
-                                <div className="w-fit text-white bg-gray-700 dark:text-black dark:bg-gray-400 rounded-3xl p-1">
+                                <div className="w-fit  text-white bg-blue-700   rounded-3xl py-1 px-2">
                                     javascript
                                 </div>
-                                <div className="w-fit text-white bg-gray-700 dark:text-black dark:bg-gray-400 rounded-3xl p-1">
+                                <div className="w-fit  text-white bg-blue-700   rounded-3xl py-1 px-2">
                                     nextjs
                                 </div>
-                                <div className="w-fit text-white bg-gray-700 dark:text-black dark:bg-gray-400 rounded-3xl p-1">
+                                <div className="w-fit  text-white bg-blue-700   rounded-3xl py-1 px-2">
                                     expressjs
                                 </div>
-                                <div className="w-fit text-white bg-gray-700 dark:text-black dark:bg-gray-400 rounded-3xl p-1">
+                                <div className="w-fit  text-white bg-blue-700   rounded-3xl py-1 px-2">
                                     mongodb
                                 </div>
                             </span>

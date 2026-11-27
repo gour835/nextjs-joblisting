@@ -41,7 +41,7 @@
   height: 1.65em;
   cursor: pointer;
   outline: none;
-  transition: 0.1s ease-out;
+  transition: 0.2s ease-out;
   margin: 1.5rem 0 0 5px;
   vertical-align: top;
 }
